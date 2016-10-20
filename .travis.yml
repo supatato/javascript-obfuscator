@@ -7,7 +7,9 @@ node_js:
   - "4"
   - "6"
   - "stable"
-  
+
+sudo: true
+
 before_install:
   # https://yarnpkg.com/en/docs/install_ci
   - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
@@ -19,8 +21,8 @@ cache:
   directories:
   - $HOME/.yarn-cache
   
-script: "npm run travis"
+script: "yarn run travis"
 
 after_success:
-  - npm run test:coveralls
+  - yarn run test:coveralls
   - rm -rf ./coverage

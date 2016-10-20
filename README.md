@@ -26,7 +26,7 @@ https://gist.github.com/sanex3339/ffc2876123b52e6d11ce45369fd53acf
 Install the package from NPM and add it to your `devDependencies`:
 
 ```sh
-$ npm install --save-dev javascript-obfuscator
+$ yarn add --dev javascript-obfuscator
 ```
 
 ## Node.js usage
