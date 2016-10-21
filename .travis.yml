@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 language: node_js
 
 node_js:
@@ -7,8 +7,6 @@ node_js:
   - "4"
   - "6"
   - "stable"
-
-sudo: true
 
 before_install:
   # https://yarnpkg.com/en/docs/install_ci
