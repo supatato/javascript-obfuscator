@@ -2,7 +2,8 @@ import * as esprima from 'esprima';
 import * as escodegen from 'escodegen';
 import * as ESTree from 'estree';
 
-import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
+import { TObfuscatorOptions } from './types/TObfuscatorOptions';
+
 import { IGeneratorOutput } from './interfaces/IGeneratorOutput';
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
 import { IOptions } from './interfaces/IOptions';
@@ -40,7 +41,7 @@ export class JavaScriptObfuscatorInternal {
      * @param sourceCode
      * @param obfuscatorOptions
      */
-    constructor (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}) {
+    constructor (sourceCode: string, obfuscatorOptions: TObfuscatorOptions = {}) {
         this.sourceCode = sourceCode;
         this.options = new Options(obfuscatorOptions);
     }

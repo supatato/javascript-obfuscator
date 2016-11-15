@@ -1,10 +1,10 @@
 import * as commander from 'commander';
 import * as path from 'path';
 
+import { TObfuscatorOptions } from '../types/TObfuscatorOptions';
 import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
 
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
 import { StringArrayEncoding } from '../enums/StringArrayEncoding';
@@ -118,10 +118,10 @@ export class JavaScriptObfuscatorCLI {
     }
 
     /**
-     * @returns {IObfuscatorOptions}
+     * @returns {TObfuscatorOptions}
      */
-    private buildOptions (): IObfuscatorOptions {
-        let obfuscatorOptions: IObfuscatorOptions = {},
+    private buildOptions (): TObfuscatorOptions {
+        let obfuscatorOptions: TObfuscatorOptions = {},
             availableOptions: string[] = Object.keys(DEFAULT_PRESET);
 
         for (const option in this.commands) {
@@ -179,7 +179,7 @@ export class JavaScriptObfuscatorCLI {
     }
 
     private processData (): void {
-        let options: IObfuscatorOptions = this.buildOptions(),
+        let options: TObfuscatorOptions = this.buildOptions(),
             outputCodePath: string = CLIUtils.getOutputCodePath((<any>this.commands).output, this.inputPath);
 
         if (options.sourceMap) {
@@ -193,7 +193,7 @@ export class JavaScriptObfuscatorCLI {
      * @param outputCodePath
      * @param options
      */
-    private processDataWithoutSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
+    private processDataWithoutSourceMap (outputCodePath: string, options: TObfuscatorOptions): void {
         let obfuscatedCode: string = JavaScriptObfuscator.obfuscate(this.data, options).getObfuscatedCode();
 
         CLIUtils.writeFile(outputCodePath, obfuscatedCode);
@@ -203,7 +203,7 @@ export class JavaScriptObfuscatorCLI {
      * @param outputCodePath
      * @param options
      */
-    private processDataWithSourceMap (outputCodePath: string, options: IObfuscatorOptions): void {
+    private processDataWithSourceMap (outputCodePath: string, options: TObfuscatorOptions): void {
         let outputSourceMapPath: string = CLIUtils.getOutputSourceMapPath(
             outputCodePath,
             options.sourceMapFileName || ''

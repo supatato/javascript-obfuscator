@@ -1,15 +1,15 @@
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
-import { IOptions } from '../interfaces/IOptions';
-
+import { TObfuscatorOptions } from '../types/TObfuscatorOptions';
 import { TOptionsNormalizerRule } from '../types/TOptionsNormalizerRule';
+
+import { IOptions } from '../interfaces/IOptions';
 
 import { Utils } from '../Utils';
 
 export class OptionsNormalizer {
     /**
-     * @type {IObfuscatorOptions}
+     * @type {TObfuscatorOptions}
      */
-    private static DISABLED_UNICODE_ARRAY_OPTIONS: IObfuscatorOptions = {
+    private static DISABLED_UNICODE_ARRAY_OPTIONS: TObfuscatorOptions = {
         rotateStringArray: false,
         stringArray: false,
         stringArrayEncoding: false,
@@ -17,17 +17,17 @@ export class OptionsNormalizer {
     };
 
     /**
-     * @type {IObfuscatorOptions}
+     * @type {TObfuscatorOptions}
      */
-    private static SELF_DEFENDING_OPTIONS: IObfuscatorOptions = {
+    private static SELF_DEFENDING_OPTIONS: TObfuscatorOptions = {
         compact: true,
         selfDefending: true
     };
 
     /**
-     * @type {IObfuscatorOptions}
+     * @type {TObfuscatorOptions}
      */
-    private static UNICODE_ARRAY_ENCODING_OPTIONS: IObfuscatorOptions = {
+    private static UNICODE_ARRAY_ENCODING_OPTIONS: TObfuscatorOptions = {
         stringArrayEncoding: 'base64'
     };
 

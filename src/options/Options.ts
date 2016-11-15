@@ -14,11 +14,11 @@ import {
     ValidatorOptions
 } from 'class-validator';
 
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
-import { IOptions } from '../interfaces/IOptions';
-
+import { TObfuscatorOptions } from '../types/TObfuscatorOptions';
 import { TSourceMapMode } from '../types/TSourceMapMode';
 import { TStringArrayEncoding } from '../types/TStringArrayEncoding';
+
+import { IOptions } from '../interfaces/IOptions';
 
 import { DEFAULT_PRESET } from '../preset-options/DefaultPreset';
 
@@ -149,7 +149,7 @@ export class Options implements IOptions {
     /**
      * @param obfuscatorOptions
      */
-    constructor (obfuscatorOptions: IObfuscatorOptions) {
+    constructor (obfuscatorOptions: TObfuscatorOptions) {
         Object.assign(this, DEFAULT_PRESET, obfuscatorOptions);
 
         let errors: ValidationError[] = validateSync(this, Options.validatorOptions);

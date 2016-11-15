@@ -1,8 +1,8 @@
-import { IObfuscatorOptions } from '../interfaces/IObfuscatorOptions';
+import { TObfuscatorOptions } from '../types/TObfuscatorOptions';
 
 import { SourceMapMode } from '../enums/SourceMapMode';
 
-export const DEFAULT_PRESET: IObfuscatorOptions = Object.freeze({
+export const DEFAULT_PRESET: TObfuscatorOptions = Object.freeze({
     compact: true,
     debugProtection: false,
     debugProtectionInterval: false,

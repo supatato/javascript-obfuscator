@@ -1,5 +1,6 @@
+import { TObfuscatorOptions } from './types/TObfuscatorOptions';
+
 import { IObfuscationResult } from './interfaces/IObfuscationResult';
-import { IObfuscatorOptions } from './interfaces/IObfuscatorOptions';
 
 import { JavaScriptObfuscatorCLI } from './cli/JavaScriptObfuscatorCLI';
 import { JavaScriptObfuscatorInternal } from './JavaScriptObfuscatorInternal';
@@ -10,7 +11,7 @@ export class JavaScriptObfuscator {
      * @param obfuscatorOptions
      * @returns {string}
      */
-    public static obfuscate (sourceCode: string, obfuscatorOptions: IObfuscatorOptions = {}): IObfuscationResult {
+    public static obfuscate (sourceCode: string, obfuscatorOptions: TObfuscatorOptions = {}): IObfuscationResult {
         let javaScriptObfuscator: JavaScriptObfuscatorInternal = new JavaScriptObfuscatorInternal(
             sourceCode,
             obfuscatorOptions
