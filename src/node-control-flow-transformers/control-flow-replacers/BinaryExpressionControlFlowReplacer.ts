@@ -7,6 +7,7 @@ import { AbstractControlFlowReplacer } from './AbstractControlFlowReplacer';
 import { BinaryExpressionFunctionNode } from '../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/BinaryExpressionFunctionNode';
 import { ControlFlowStorage } from '../../ControlFlowStorage';
 import { ControlFlowStorageCallNode } from '../../custom-nodes/control-flow-replacers-nodes/binary-expression-control-flow-replacer-nodes/ControlFlowStorageCallNode';
+import { ControlFlowStoragePassThroughNode } from '../../custom-nodes/control-flow-replacers-nodes/ControlFlowStoragePassThroughNode';
 
 export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowReplacer {
     /**
@@ -23,25 +24,48 @@ export class BinaryExpressionControlFlowReplacer extends AbstractControlFlowRepl
      * @param binaryExpressionNode
      * @param parentNode
      * @param controlFlowStorage
+     * @param passThroughControlFlowStorage
      * @param controlFlowStorageCustomNodeName
+     * @param passThroughControlFlowStorageCustomNodeName
      * @returns {ICustomNode | undefined}
      */
     public replace (
         binaryExpressionNode: ESTree.BinaryExpression,
         parentNode: ESTree.Node,
         controlFlowStorage: ControlFlowStorage,
-        controlFlowStorageCustomNodeName: string
+        passThroughControlFlowStorage: ControlFlowStorage | undefined,
+        controlFlowStorageCustomNodeName: string,
+        passThroughControlFlowStorageCustomNodeName: string | undefined
     ): ICustomNode | undefined {
-        const key: string = AbstractControlFlowReplacer.getStorageKey();
+        const rootStorageKey: string = AbstractControlFlowReplacer.getStorageKey();
+        const currentStorageKey: string = AbstractControlFlowReplacer.getStorageKey();
 
-        controlFlowStorage.addToStorage(key, new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options));
-
-        return new ControlFlowStorageCallNode(
-            controlFlowStorageCustomNodeName,
-            key,
-            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
-            BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right),
-            this.options
+        controlFlowStorage.addToStorage(
+            rootStorageKey,
+            new BinaryExpressionFunctionNode(binaryExpressionNode.operator, this.options)
         );
+
+        if (passThroughControlFlowStorage && passThroughControlFlowStorageCustomNodeName) {
+            passThroughControlFlowStorage.addToStorage(
+                currentStorageKey,
+                new ControlFlowStoragePassThroughNode(controlFlowStorageCustomNodeName, rootStorageKey, this.options)
+            );
+
+            return new ControlFlowStorageCallNode(
+                passThroughControlFlowStorageCustomNodeName,
+                currentStorageKey,
+                BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
+                BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right),
+                this.options
+            );
+        } else {
+            return new ControlFlowStorageCallNode(
+                controlFlowStorageCustomNodeName,
+                rootStorageKey,
+                BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.left),
+                BinaryExpressionControlFlowReplacer.getExpressionValue(binaryExpressionNode.right),
+                this.options
+            );
+        }
     }
 }

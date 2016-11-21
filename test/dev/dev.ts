@@ -12,7 +12,10 @@ if (!(<any>global)._babelPolyfill) {
         (function(){
             function t () {
                 return function () {
-                    var t = 1 * 2;
+                    function s () {
+                        var t = 1 * 2;
+                        var t = 1 / 2;
+                    }
                 }
             }
             

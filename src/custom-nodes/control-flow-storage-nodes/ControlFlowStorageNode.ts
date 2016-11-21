@@ -1,6 +1,9 @@
+import * as estraverse from 'estraverse';
+import * as ESTree from 'estree';
 import * as format from 'string-template';
 
 import { TNodeWithBlockStatement } from '../../types/TNodeWithBlockStatement';
+import { TStatement } from '../../types/TStatement';
 
 import { ICustomNode } from '../../interfaces/custom-nodes/ICustomNode';
 import { IOptions } from '../../interfaces/IOptions';
@@ -13,6 +16,8 @@ import { ControlFlowStorageTemplate } from '../../templates/custom-nodes/control
 
 import { AbstractCustomNode } from '../AbstractCustomNode';
 import { NodeAppender } from '../../node/NodeAppender';
+import { Node } from '../../node/Node';
+import { NodeUtils } from '../../node/NodeUtils';
 
 export class ControlFlowStorageNode extends AbstractCustomNode {
     /**
@@ -75,6 +80,28 @@ export class ControlFlowStorageNode extends AbstractCustomNode {
      */
     public getNodeData (): ControlFlowStorage {
         return this.controlFlowStorage;
+    }
+
+    /**
+     * @returns {TStatement[]}
+     */
+    protected getNodeStructure (): TStatement[] {
+        const nodeStructure: TStatement[] = NodeUtils.convertCodeToStructure(this.getCode());
+
+        nodeStructure.forEach((statement: TStatement) => {
+            estraverse.replace(statement, {
+                enter: (node: ESTree.Node, parentNode: ESTree.Node): void => {
+                    if (!Node.isFunctionExpressionNode(node)) {
+                        return;
+                    }
+
+                    node.metadata = {};
+                    node.metadata.skipByControlFlow = true;
+                }
+            });
+        });
+
+        return nodeStructure;
     }
 
     /**

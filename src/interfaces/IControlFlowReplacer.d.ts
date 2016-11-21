@@ -8,6 +8,8 @@ export interface IControlFlowReplacer {
         node: ESTree.Node,
         parentNode: ESTree.Node,
         controlFlowStorage: ControlFlowStorage,
-        controlFlowStorageCustomNodeName: string
+        passThroughControlFlowStorage: ControlFlowStorage | undefined,
+        controlFlowStorageCustomNodeName: string,
+        passThroughControlFlowStorageCustomNodeName: string | undefined
     ): ICustomNode | undefined;
 }

@@ -17,6 +17,7 @@ import { Node } from '../node/Node';
 import { NodeAppender } from '../node/NodeAppender';
 import { Utils } from '../Utils';
 import { NodeUtils } from '../node/NodeUtils';
+import { TNodeWithBlockStatement } from '../types/TNodeWithBlockStatement';
 
 export class FunctionControlFlowTransformer extends AbstractNodeControlFlowTransformer {
     /**
@@ -45,6 +46,10 @@ export class FunctionControlFlowTransformer extends AbstractNodeControlFlowTrans
      * @param functionNode
      */
     private changeFunctionBodyControlFlow (functionNode: ESTree.Function): void {
+        if (functionNode.metadata && functionNode.metadata.skipByControlFlow) {
+            return;
+        }
+
         if (Node.isArrowFunctionExpressionNode(functionNode)) {
             return;
         }
@@ -52,7 +57,7 @@ export class FunctionControlFlowTransformer extends AbstractNodeControlFlowTrans
         const controlFlowStorage: ControlFlowStorage = new ControlFlowStorage();
         const controlFlowStorageCustomNodeName: string = Utils.getRandomVariableName(6);
 
-        console.log(NodeUtils.getNodeBlockScopeDepth(functionNode.body));
+        const blockScopeNodes: Map <any, any> = new Map();
 
         estraverse.replace(functionNode.body, {
             enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
@@ -63,9 +68,38 @@ export class FunctionControlFlowTransformer extends AbstractNodeControlFlowTrans
                     return;
                 }
 
+                const blockScopeOfNode: TNodeWithBlockStatement = NodeUtils.getBlockScopeOfNode(node);
+
+                let passThroughControlFlowStorage: ControlFlowStorage | undefined = undefined;
+                let passThroughControlFlowStorageCustomNodeName: string | undefined = undefined;
+
+                if (blockScopeOfNode !== functionNode.body) {
+                    if (!blockScopeNodes.has(blockScopeOfNode)) {
+                        passThroughControlFlowStorage = new ControlFlowStorage();
+                        passThroughControlFlowStorageCustomNodeName = Utils.getRandomVariableName(6);
+
+                        blockScopeNodes.set(blockScopeOfNode, {
+                            storage: passThroughControlFlowStorage,
+                            name: passThroughControlFlowStorageCustomNodeName
+                        });
+                    } else {
+                        const data: any = blockScopeNodes.get(blockScopeOfNode);
+
+                        passThroughControlFlowStorage = data.storage;
+                        passThroughControlFlowStorageCustomNodeName = data.name;
+                    }
+                }
+
                 const controlFlowStorageCallCustomNode: ICustomNode | undefined = new controlFlowReplacer(
                     this.nodes, this.options
-                ).replace(node, parentNode, controlFlowStorage, controlFlowStorageCustomNodeName);
+                ).replace(
+                    node,
+                    parentNode,
+                    controlFlowStorage,
+                    passThroughControlFlowStorage,
+                    controlFlowStorageCustomNodeName,
+                    passThroughControlFlowStorageCustomNodeName
+                );
 
                 if (!controlFlowStorageCallCustomNode) {
                     return;
@@ -84,6 +118,23 @@ export class FunctionControlFlowTransformer extends AbstractNodeControlFlowTrans
                 return statementNode.expression;
             }
         });
+
+        blockScopeNodes.forEach((data: any, key: any) => {
+            const passThroughControlFlowStorageNode: ControlFlowStorageNode = new ControlFlowStorageNode(
+                data.storage,
+                data.name,
+                this.options
+            );
+
+            NodeAppender.prependNode(
+                key,
+                passThroughControlFlowStorageNode.getNode()
+            );
+        });
+
+        if (!Array.from(controlFlowStorage.getStorage()).length) {
+            return;
+        }
 
         const controlFlowStorageCustomNode: ControlFlowStorageNode = new ControlFlowStorageNode(
             controlFlowStorage,

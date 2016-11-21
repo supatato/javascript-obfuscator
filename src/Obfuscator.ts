@@ -197,7 +197,7 @@ export class Obfuscator implements IObfuscator {
         // first pass: control flow flattening
         if (this.options.controlFlowFlattening) {
             estraverse.traverse(node, {
-                leave: (node: ESTree.Node, parentNode: ESTree.Node): void => {
+                enter: (node: ESTree.Node, parentNode: ESTree.Node): void => {
                     this.initializeNodeControlFlowChangers(node, parentNode);
                 }
             });
