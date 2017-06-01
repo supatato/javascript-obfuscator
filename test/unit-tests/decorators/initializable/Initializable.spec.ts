@@ -5,7 +5,7 @@ import { IInitializable } from '../../../../src/interfaces/IInitializable';
 
 describe('@initializable', () => {
     describe('initializable (initializeMethodKey: string): any', () => {
-        describe('property was initialized', () => {
+        describe('variant #1: property was initialized', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
@@ -28,7 +28,7 @@ describe('@initializable', () => {
             });
         });
 
-        describe('custom initialization method name is passed', () => {
+        describe('variant #2: custom initialization method name is passed', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
@@ -54,7 +54,7 @@ describe('@initializable', () => {
             });
         });
 
-        describe('property didn\'t initialized', () => {
+        describe('variant #3: property didn\'t initialized', () => {
             const testFunc: () => void = () => {
                 class Foo implements IInitializable {
                     @initializable()
@@ -76,7 +76,7 @@ describe('@initializable', () => {
             });
         });
 
-        describe('`initialize` method with custom name', () => {
+        describe('variant #4: `initialize` method with custom name', () => {
             const testFunc: () => void = () => {
                 class Foo {
                     @initializable('bar')
