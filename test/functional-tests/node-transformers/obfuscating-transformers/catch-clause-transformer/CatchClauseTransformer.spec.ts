@@ -9,16 +9,22 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('CatchClauseTransformer', () => {
+    let obfuscatedCode: string;
+
     describe('changeControlFlow (catchClauseNode: ESTree.CatchClause): void', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
         const paramNameRegExp: RegExp = /catch *\((_0x([a-f0-9]){4,6})\) *\{/;
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
+
+        before(() => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/input.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
 
         it('should transform catch clause node', () => {
             assert.match(obfuscatedCode, paramNameRegExp);
@@ -39,13 +45,16 @@ describe('CatchClauseTransformer', () => {
     });
 
     describe('object pattern as parameter', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        before(() => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
 
         it('shouldn\'t transform function parameter object pattern identifier', () => {
             const functionParameterMatch: RegExp = /\} *catch *\(\{ *name *\}\) *\{/;

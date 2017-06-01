@@ -10,7 +10,6 @@ describe('Utils', () => {
             assert.deepEqual(Utils.arrayRange(5), [0, 1, 2, 3, 4]);
         });
 
-
         it('should return empty array if length is 0', () => {
             assert.deepEqual(Utils.arrayRange(0), []);
         });
@@ -30,7 +29,6 @@ describe('Utils', () => {
         it('should rotate (shift) array by a given value', () => {
             assert.deepEqual(Utils.arrayRotate(array, 2), [5, 6, 1, 2, 3, 4]);
         });
-
 
         it('should do nothing if value <= 0', () => {
             assert.deepEqual(Utils.arrayRotate(array, 0), [1, 2, 3, 4, 5, 6]);
@@ -78,7 +76,6 @@ describe('Utils', () => {
         it('should rotate string by a given value', () => {
             assert.deepEqual(Utils.stringRotate(string, 2), 'fgabcde');
         });
-
 
         it('should do nothing if value <= 0', () => {
             assert.deepEqual(Utils.stringRotate(string, 0), 'abcdefg');

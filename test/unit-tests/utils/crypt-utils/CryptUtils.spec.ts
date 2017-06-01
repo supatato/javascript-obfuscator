@@ -11,7 +11,12 @@ describe('CryptUtils', () => {
 
     describe('hideString (str: string, length: number): [string, string]', () => {
         let original1: string = 'example.com',
+            str1: string,
+            diff: string;
+
+        before(() => {
             [str1, diff] = CryptUtils.hideString(original1, 30);
+        });
 
         it('should return a string with the original string within', () => {
             assert.isTrue(str1.length > original1.length);

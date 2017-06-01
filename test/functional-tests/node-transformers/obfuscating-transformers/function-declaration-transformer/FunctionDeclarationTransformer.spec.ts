@@ -9,14 +9,19 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('FunctionDeclarationTransformer', () => {
+    let obfuscatedCode: string;
+
     describe('transformation of `functionDeclaration` node names', () => {
-        const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
-        const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
+        before(() => {
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/input.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
 
         it('shouldn\'t transform function name if `functionDeclaration` parent block scope is a `ProgramNode`', () => {
             const functionNameIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
