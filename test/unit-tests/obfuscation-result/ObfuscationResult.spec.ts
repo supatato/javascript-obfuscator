@@ -10,7 +10,7 @@ describe('ObfuscationResult', () => {
             obfuscationResult: IObfuscationResult,
             sourceMap: string = 'sourceMap';
 
-        beforeEach(() => {
+        before(() => {
             obfuscationResult = new ObfuscationResult();
             obfuscationResult.initialize(obfuscatedCode, sourceMap);
         });
