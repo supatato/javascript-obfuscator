@@ -32,28 +32,23 @@ describe('StringArrayNode', () => {
         });
     });
 
-    it('should correctly append `StringArrayNode` custom node into the obfuscated code if `stringArray` option is set', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                stringArray: true,
-                stringArrayThreshold: 1
-            }
-        );
+    describe('`stringArray` option isn\'t set', () => {
+        let obfuscatedCode: string;
 
-        assert.match(obfuscationResult.getObfuscatedCode(), /^var _0x([a-f0-9]){4} *= *\[/);
-    });
+        before(() => {
+            let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                {
+                    ...NO_CUSTOM_NODES_PRESET,
+                    stringArray: false
+                }
+            );
 
-    it('should\'t append `StringArrayNode` custom node into the obfuscated code if `stringArray` option is not set', () => {
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-input.js'),
-            {
-                ...NO_CUSTOM_NODES_PRESET,
-                stringArray: false
-            }
-        );
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
 
-        assert.notMatch(obfuscationResult.getObfuscatedCode(), /^var _0x([a-f0-9]){4} *= *\[/);
+        it('shouldn\'t append custom node into the obfuscated code', () => {
+            assert.notMatch(obfuscatedCode, regExp);
+        });
     });
 });
