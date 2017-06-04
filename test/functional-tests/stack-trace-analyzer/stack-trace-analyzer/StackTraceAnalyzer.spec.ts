@@ -156,7 +156,7 @@ describe('StackTraceAnalyzer', () => {
             stackTraceData: IStackTraceData[],
             expectedStackTraceData: IStackTraceData[];
 
-        it('should returns correct IStackTraceData - variant #1: basic-1', () => {
+        it('should return correct IStackTraceData - variant #1: basic-1', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/basic-1.js')
@@ -203,7 +203,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #2: basic-2', () => {
+        it('should return correct IStackTraceData - variant #2: basic-2', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/basic-2.js')
@@ -239,7 +239,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #3: deep conditions nesting', () => {
+        it('should return correct IStackTraceData - variant #3: deep conditions nesting', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/deep-conditions-nesting.js')
@@ -275,7 +275,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #4: call before declaration', () => {
+        it('should return correct IStackTraceData - variant #4: call before declaration', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/call-before-declaration.js')
@@ -295,7 +295,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #5: call expression of object member #1', () => {
+        it('should return correct IStackTraceData - variant #5: call expression of object member #1', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-1.js')
@@ -351,7 +351,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #5: call expression of object member #2', () => {
+        it('should return correct IStackTraceData - variant #5: call expression of object member #2', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/call-expression-of-object-member-2.js')
@@ -376,7 +376,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #6: no call expressions', () => {
+        it('should return correct IStackTraceData - variant #6: no call expressions', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/no-call-expressions.js')
@@ -390,7 +390,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #7: only call expression', () => {
+        it('should return correct IStackTraceData - variant #7: only call expression', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/only-call-expression.js')
@@ -404,7 +404,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #8: self-invoking functions', () => {
+        it('should return correct IStackTraceData - variant #8: self-invoking functions', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/self-invoking-functions.js')
@@ -436,7 +436,7 @@ describe('StackTraceAnalyzer', () => {
             assert.deepEqual(stackTraceData, expectedStackTraceData);
         });
 
-        it('should returns correct IStackTraceData - variant #9: no recursion', () => {
+        it('should return correct IStackTraceData - variant #9: no recursion', () => {
             astTree = Nodes.getProgramNode(
                 NodeUtils.convertCodeToStructure(
                     readFileAsString(__dirname + '/fixtures/no-recursion.js')

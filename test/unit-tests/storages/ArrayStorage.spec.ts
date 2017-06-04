@@ -53,7 +53,7 @@ describe('ArrayStorage', () => {
             arrayStorage = storage.getStorage();
         });
 
-        it('should returns storage', () => {
+        it('should return storage', () => {
             assert.instanceOf(arrayStorage, expectedInstanceOf);
         });
     });
@@ -71,7 +71,7 @@ describe('ArrayStorage', () => {
                 value = storage.get(storageKey);
             });
 
-            it('should returns value from storage by key', () => {
+            it('should return value from storage by key', () => {
                 assert.equal(value, expectedValue);
             });
         });
@@ -105,7 +105,7 @@ describe('ArrayStorage', () => {
             storageLength = storage.getLength();
         });
 
-        it('should returns length of storage', () => {
+        it('should return length of storage', () => {
             assert.equal(storageLength, expectedStorageLength);
         });
     });
@@ -121,7 +121,7 @@ describe('ArrayStorage', () => {
                 key = storage.getKeyOf(storageValue);
             });
 
-            it('should returns key of string value', () => {
+            it('should return key of string value', () => {
                 assert.equal(key, storageKey);
             });
         });
@@ -138,7 +138,7 @@ describe('ArrayStorage', () => {
                 key = storage.getKeyOf(object);
             });
 
-            it('should returns key of object if objects in `set` and `get` are two same objects', () => {
+            it('should return key of object if objects in `set` and `get` are two same objects', () => {
                 assert.equal(key, storageKey);
             });
         });

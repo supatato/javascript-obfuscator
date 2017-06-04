@@ -158,7 +158,7 @@ describe('NodeAppender', () => {
     });
 
     describe('getRandomStackTraceIndex (stackTraceRootLength: number): number', () => {
-        it('should returns random index between 0 and stack trace data root length', () => {
+        it('should return random index between 0 and stack trace data root length', () => {
             let index: number;
 
             for (let i: number = 0; i < 100; i++) {

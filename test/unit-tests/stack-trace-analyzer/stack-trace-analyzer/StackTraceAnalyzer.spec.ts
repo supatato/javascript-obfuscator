@@ -14,7 +14,7 @@ describe('StackTraceAnalyzer', () => {
                 limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
-            it('should returns correct limit index based on block scope body length', () => {
+            it('should return correct limit index based on block scope body length', () => {
                 assert.equal(limitIndex, expectedLimitIndex);
             });
         });
@@ -27,7 +27,7 @@ describe('StackTraceAnalyzer', () => {
                 limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
-            it('should returns correct limit index based on block scope body length', () => {
+            it('should return correct limit index based on block scope body length', () => {
                 assert.equal(limitIndex, expectedLimitIndex);
             });
         });
@@ -40,7 +40,7 @@ describe('StackTraceAnalyzer', () => {
                 limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
-            it('should returns correct limit index based on block scope body length', () => {
+            it('should return correct limit index based on block scope body length', () => {
                 assert.equal(limitIndex, expectedLimitIndex);
             });
         });
@@ -53,7 +53,7 @@ describe('StackTraceAnalyzer', () => {
                 limitIndex = StackTraceAnalyzer.getLimitIndex(blockScopeBodyLength);
             });
 
-            it('should returns correct limit index based on block scope body length', () => {
+            it('should return correct limit index based on block scope body length', () => {
                 assert.equal(limitIndex, expectedLimitIndex);
             });
         });
