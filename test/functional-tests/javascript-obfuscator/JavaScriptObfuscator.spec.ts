@@ -148,9 +148,12 @@ describe('JavaScriptObfuscator', () => {
                     );
 
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                    sourceMapNames = JSON.parse(obfuscationResult.getSourceMap()).names;
-                    sourceMapSources = JSON.parse(obfuscationResult.getSourceMap()).sources;
-                    sourceMapMappings = JSON.parse(obfuscationResult.getSourceMap()).mappings;
+
+                    const sourceMapObject: any = JSON.parse(obfuscationResult.getSourceMap());
+
+                    sourceMapNames = sourceMapObject.names;
+                    sourceMapSources = sourceMapObject.sources;
+                    sourceMapMappings = sourceMapObject.mappings;
                 });
 
                 it('should return empty obfuscated code', () => {

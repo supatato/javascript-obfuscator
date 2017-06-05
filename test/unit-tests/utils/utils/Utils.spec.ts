@@ -114,7 +114,7 @@ describe('Utils', () => {
                 hexString = Utils.decToHex(number);
             });
 
-            it('should creates a string with hexadecimal value from a given decimal number', () => {
+            it('should create a string with hexadecimal value from a given decimal number', () => {
                 assert.equal(hexString, expectedHexString);
             });
         });
@@ -129,7 +129,7 @@ describe('Utils', () => {
                 hexString = Utils.decToHex(number);
             });
 
-            it('should creates a string with hexadecimal value from a given decimal number', () => {
+            it('should create a string with hexadecimal value from a given decimal number', () => {
                 assert.equal(hexString, expectedHexString);
             });
         });
@@ -144,7 +144,7 @@ describe('Utils', () => {
                 hexString = Utils.decToHex(number);
             });
 
-            it('should creates a string with hexadecimal value from a given decimal number', () => {
+            it('should create a string with hexadecimal value from a given decimal number', () => {
                 assert.equal(hexString, expectedHexString);
             });
         });
@@ -159,7 +159,7 @@ describe('Utils', () => {
                 hexString = Utils.decToHex(number);
             });
 
-            it('should creates a string with hexadecimal value from a given decimal number', () => {
+            it('should create a string with hexadecimal value from a given decimal number', () => {
                 assert.equal(hexString, expectedHexString);
             });
         });
@@ -332,7 +332,7 @@ describe('Utils', () => {
             actualString = Utils.stringToJSFuck(string);
         });
 
-        it('should creates a JSFuck encoded string from a given string', () => {
+        it('should create a JSFuck encoded string from a given string', () => {
             assert.equal(actualString, expectedString);
         });
     });
