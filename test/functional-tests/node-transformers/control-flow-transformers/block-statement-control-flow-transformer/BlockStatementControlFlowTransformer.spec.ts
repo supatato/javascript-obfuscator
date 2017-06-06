@@ -8,26 +8,19 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
+/**
+ * @param hexNumber
+ * @return {RegExp}
+ */
+const getStatementRegExp: (hexNumber: string) => RegExp = (hexNumber) => {
+    return new RegExp(`console\\['log'\\]\\(${hexNumber}\\);`);
+};
+
 describe('BlockStatementControlFlowTransformer', () => {
     describe('transformNode (blockStatementNode: ESTree.BlockStatement): ESTree.Node', () => {
-        const statementRegExp1: RegExp = /console\['log'\]\(0x1\);/;
-        const statementRegExp2: RegExp = /console\['log'\]\(0x2\);/;
-        const statementRegExp3: RegExp = /console\['log'\]\(0x3\);/;
-        const statementRegExp4: RegExp = /console\['log'\]\(0x4\);/;
-        const statementRegExp5: RegExp = /console\['log'\]\(0x5\);/;
-
-        const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
-        const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
-
-        const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
-        const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
-
-        let obfuscatedCode: string,
-            statementRegExp: RegExp,
-            switchCaseLength: number,
-            switchCaseMap: string[];
-
         describe('variant #1: 5 simple statements', () => {
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/input-1.js'),
@@ -39,34 +32,84 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
-
-                const switchCaseMapStringMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapStringRegExp);
-                const switchCaseMapMatch: string = switchCaseMapStringMatches[1];
-
-                switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
             });
 
-            it('should save all statements', () => {
-                assert.match(obfuscatedCode, statementRegExp1);
-                assert.match(obfuscatedCode, statementRegExp2);
-                assert.match(obfuscatedCode, statementRegExp3);
-                assert.match(obfuscatedCode, statementRegExp4);
-                assert.match(obfuscatedCode, statementRegExp5);
+            describe('`console.log` statements', ()=> {
+                const statementRegExp1: RegExp = getStatementRegExp('0x1');
+                const statementRegExp2: RegExp = getStatementRegExp('0x2');
+                const statementRegExp3: RegExp = getStatementRegExp('0x3');
+                const statementRegExp4: RegExp = getStatementRegExp('0x4');
+                const statementRegExp5: RegExp = getStatementRegExp('0x5');
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp1);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp2);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp3);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp4);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp5);
+                });
             });
 
-            it('should wrap block statement statements in switch case structure', () => {
-                assert.match(obfuscatedCode, switchCaseRegExp);
-                assert.equal(switchCaseLength, 5);
+            describe('block statement statements', () => {
+                const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+                const expectedSwitchCaseLength: number = 5;
+
+                let switchCaseLength: number;
+
+                before(() => {
+                    const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
+
+                    switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
+                });
+
+                it('should wrap block statement statements in switch-case structure', () => {
+                    assert.match(obfuscatedCode, switchCaseRegExp);
+                });
+
+                it('each statement should be wrapped by switch-case structure', () => {
+                    assert.equal(switchCaseLength, expectedSwitchCaseLength);
+                });
             });
 
-            it('should create variable with order of switch cases sequence', () => {
-                assert.deepEqual(switchCaseMap, ['0', '1', '2', '3', '4']);
-                assert.match(obfuscatedCode, switchCaseMapVariableRegExp);
+            describe('switch-case map', () => {
+                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
+                const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
+
+                let switchCaseMap: string[];
+
+                before(() => {
+                    const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                    const switchCaseMapStringMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapStringRegExp);
+                    const switchCaseMapMatch: string = switchCaseMapStringMatches[1];
+
+                    switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
+                });
+
+                it('should create switch-case map variable', () => {
+                    assert.match(obfuscatedCode, switchCaseMapVariableRegExp);
+                });
+
+                it('should create valid switch-case map variable with order of switch cases sequence', () => {
+                    assert.deepEqual(switchCaseMap, expectedSwitchCasesSequence);
+                });
             });
         });
 
         describe('variant #2: 5 simple statements inside while loop without break or continue statement', () => {
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/input-2.js'),
@@ -79,34 +122,86 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
-
-                const switchCaseMapStringMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapStringRegExp);
-                const switchCaseMapMatch: string = switchCaseMapStringMatches[1];
-
-                switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
             });
 
-            it('should save all statements', () => {
-                assert.match(obfuscatedCode, statementRegExp1);
-                assert.match(obfuscatedCode, statementRegExp2);
-                assert.match(obfuscatedCode, statementRegExp3);
-                assert.match(obfuscatedCode, statementRegExp4);
-                assert.match(obfuscatedCode, statementRegExp5);
+            describe('`console.log` statements', ()=> {
+                const statementRegExp1: RegExp = getStatementRegExp('0x1');
+                const statementRegExp2: RegExp = getStatementRegExp('0x2');
+                const statementRegExp3: RegExp = getStatementRegExp('0x3');
+                const statementRegExp4: RegExp = getStatementRegExp('0x4');
+                const statementRegExp5: RegExp = getStatementRegExp('0x5');
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp1);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp2);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp3);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp4);
+                });
+
+                it('should save statement', () => {
+                    assert.match(obfuscatedCode, statementRegExp5);
+                });
             });
 
-            it('should wrap block statement statements in switch case structure', () => {
-                assert.match(obfuscatedCode, switchCaseRegExp);
-                assert.equal(switchCaseLength, 5);
+            describe('block statement statements', () => {
+                const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+                const expectedSwitchCaseLength: number = 5;
+
+                let switchCaseLength: number;
+
+                before(() => {
+                    const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
+
+                    switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
+                });
+
+                it('should wrap block statement statements in switch-case structure', () => {
+                    assert.match(obfuscatedCode, switchCaseRegExp);
+                });
+
+                it('each statement should be wrapped by switch-case structure', () => {
+                    assert.equal(switchCaseLength, expectedSwitchCaseLength);
+                });
             });
 
-            it('should create variable with order of switch cases sequence', () => {
-                assert.deepEqual(switchCaseMap, ['0', '1', '2', '3', '4']);
-                assert.match(obfuscatedCode, switchCaseMapVariableRegExp);
+            describe('switch-case map', () => {
+                const switchCaseMapVariableRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *_0x(?:[a-f0-9]){4,6}\['.*'\]\['split'\]\('\\x7c'\)/;
+                const expectedSwitchCasesSequence: string[] = ['0', '1', '2', '3', '4'];
+
+                let switchCaseMap: string[];
+
+                before(() => {
+                    const switchCaseMapStringRegExp: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *\{'.*' *: *'(.*)'\};/;
+                    const switchCaseMapStringMatches: RegExpMatchArray = <RegExpMatchArray>obfuscatedCode.match(switchCaseMapStringRegExp);
+                    const switchCaseMapMatch: string = switchCaseMapStringMatches[1];
+
+                    switchCaseMap = switchCaseMapMatch.replace(/\\x7c/g, '|').split('|').sort();
+                });
+
+                it('should create switch-case map variable', () => {
+                    assert.match(obfuscatedCode, switchCaseMapVariableRegExp);
+                });
+
+                it('should create valid switch-case map variable with order of switch cases sequence', () => {
+                    assert.deepEqual(switchCaseMap, expectedSwitchCasesSequence);
+                });
             });
         });
 
-        describe('variant #3: less then 5 statements', () => {
+        describe('variant #3: statements length less then 5 statements', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *console\['log'\]\(0x1\); *\} *\( *\) *\);$/;
+
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/one-statement.js'),
@@ -118,15 +213,18 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                statementRegExp = /^\(function *\( *\) *\{ *console\['log'\]\(0x1\); *\} *\( *\) *\);$/;
             });
 
-            it('shouldn\'t transform block statement if statements length less than 5', () => {
+            it('shouldn\'t transform block statement', () => {
                 assert.match(obfuscatedCode, statementRegExp);
             });
         });
 
-        describe('variant #4: const declaration inside block statement', () => {
+        describe('variant #4: block statement contain variable declaration with `const` kind', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *const *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
+
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/const-declaration.js'),
@@ -138,15 +236,18 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                statementRegExp = /^\(function *\( *\) *\{ *const *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
             });
 
-            it('shouldn\'t transform block statement if block statement contain variable declaration with `const` kind', () => {
+            it('shouldn\'t transform block statement', () => {
                 assert.match(obfuscatedCode, statementRegExp);
             });
         });
 
-        describe('variant #5: let declaration inside block statement', () => {
+        describe('variant #5: block statement contain variable declaration with `let` kind', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *let *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
+
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/let-declaration.js'),
@@ -158,15 +259,18 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                statementRegExp = /^\(function *\( *\) *\{ *let *_0x([a-f0-9]){4,6} *= *0x1; *console\['log'\]\(0x1\);/;
             });
 
-            it('shouldn\'t transform block statement if block statement contain variable declaration with `let` kind', () => {
+            it('shouldn\'t transform block statement', () => {
                 assert.match(obfuscatedCode, statementRegExp);
             });
         });
 
-        describe('variant #6: break statement inside block statement', () => {
+        describe('variant #6: block statement contain break statement', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *break; *console\['log'\]\(0x1\);/;
+
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/break-statement.js'),
@@ -178,15 +282,18 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                statementRegExp= /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *break; *console\['log'\]\(0x1\);/;
             });
 
-            it('shouldn\'t transform block statement if block statement contain break statement', () => {
+            it('shouldn\'t transform block statement', () => {
                 assert.match(obfuscatedCode, statementRegExp);
             });
         });
 
-        describe('variant #7: continue statement inside block statement', () => {
+        describe('variant #7: block statement contain continue statement', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *continue; *console\['log'\]\(0x1\);/;
+
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/continue-statement.js'),
@@ -198,15 +305,18 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                statementRegExp = /^\(function *\( *\) *\{ *while *\(!!\[\]\) *\{ *continue; *console\['log'\]\(0x1\);/;
             });
 
-            it('shouldn\'t transform block statement if block statement contain continue statement', () => {
+            it('shouldn\'t transform block statement', () => {
                 assert.match(obfuscatedCode, statementRegExp);
             });
         });
 
-        describe('variant #8: function declaration inside block statement', () => {
+        describe('variant #8: block statement contain function declaration', () => {
+            const statementRegExp: RegExp = /^\(function *\( *\) *\{ *function *_0x([a-f0-9]){4,6} *\( *\) *\{ *\} *console\['log'\]\(0x1\);/
+
+            let obfuscatedCode: string;
+
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/function-declaration.js'),
@@ -218,10 +328,9 @@ describe('BlockStatementControlFlowTransformer', () => {
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
-                statementRegExp = /^\(function *\( *\) *\{ *function *_0x([a-f0-9]){4,6} *\( *\) *\{ *\} *console\['log'\]\(0x1\);/;
             });
 
-            it('shouldn\'t transform block statement if block statement contain function declaration', () => {
+            it('shouldn\'t transform block statement', () => {
                 assert.match(obfuscatedCode, statementRegExp);
             });
         });
@@ -235,8 +344,8 @@ describe('BlockStatementControlFlowTransformer', () => {
             const regExp1: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/g;
             const regExp2: RegExp = /\(function *\( *\) *\{ *console\['log'\]\(0x1\);/g;
 
-            let transformedStatementMatchesLength: number,
-                untouchedStatementMatchesLength: number;
+            let transformedStatementPercentage: number,
+                untouchedStatementPercentage: number;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -248,13 +357,25 @@ describe('BlockStatementControlFlowTransformer', () => {
                     }
                 );
 
-                transformedStatementMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp1)!.length;
-                untouchedStatementMatchesLength = obfuscationResult.getObfuscatedCode().match(regExp2)!.length;
+                const transformedStatementMatchesLength: number = obfuscationResult
+                    .getObfuscatedCode()
+                    .match(regExp1)!
+                    .length;
+                const untouchedStatementMatchesLength: number = obfuscationResult
+                    .getObfuscatedCode()
+                    .match(regExp2)!
+                    .length;
+
+                transformedStatementPercentage = transformedStatementMatchesLength / samples;
+                untouchedStatementPercentage = untouchedStatementMatchesLength / samples;
             });
 
             it('should transform block statement with `controlFlowFlatteningThreshold` chance', () => {
-                assert.closeTo(transformedStatementMatchesLength / samples, controlFlowFlatteningThreshold, delta);
-                assert.closeTo(untouchedStatementMatchesLength / samples, controlFlowFlatteningThreshold, delta);
+                assert.closeTo(transformedStatementPercentage, controlFlowFlatteningThreshold, delta);
+            });
+
+            it('should keep block statement with (1 - `controlFlowFlatteningThreshold`) chance', () => {
+                assert.closeTo(untouchedStatementPercentage, controlFlowFlatteningThreshold, delta);
             });
         });
     });
