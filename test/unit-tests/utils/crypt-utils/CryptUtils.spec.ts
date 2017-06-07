@@ -38,7 +38,7 @@ describe('CryptUtils', () => {
             });
 
             it('should create hidden string with length equal or bigger than given length', () => {
-                assert.isTrue(hiddenStringActualLength > hiddenStringLength);
+                assert.isTrue(hiddenStringActualLength > originalStringActualLength);
             });
         });
 
