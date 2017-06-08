@@ -6,7 +6,9 @@ import { readFileAsString } from '../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../src/JavaScriptObfuscator';
 
-describe('JavaScriptObfuscator runtime eval', () => {
+describe('JavaScriptObfuscator runtime eval', function () {
+    this.timeout(100000);
+
     let obfuscatedCode: string;
 
     before(() => {

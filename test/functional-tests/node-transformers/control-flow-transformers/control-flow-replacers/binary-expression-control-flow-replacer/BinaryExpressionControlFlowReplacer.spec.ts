@@ -89,7 +89,7 @@ describe('BinaryExpressionControlFlowReplacer', function () {
                 usingExistingIdentifierChance = equalsValue / samplesCount;
             });
 
-            it('should replace binary expression node by call to control flow storage node', () => {
+            it('should replace binary expression node with call to control flow storage node', () => {
                 assert.equal(matchErrorsCount, expectedMatchErrorsCount);
             });
 

@@ -8,7 +8,9 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
-describe('FunctionControlFlowTransformer', () => {
+describe('FunctionControlFlowTransformer', function () {
+    this.timeout(100000);
+
     const variableMatch: string = '_0x([a-f0-9]){4,6}';
     const rootControlFlowStorageNodeMatch: string = `` +
         `var *${variableMatch} *= *\\{` +
@@ -25,11 +27,13 @@ describe('FunctionControlFlowTransformer', () => {
         `\\};` +
     ``;
 
-    let obfuscatedCode: string;
-
     describe('transformNode (functionNode: ESTree.Function): ESTree.Node', () => {
         describe('variant #1 - single `control flow storage` node with single item', () => {
-            it('should add `control flow storage` node to the obfuscated code', () => {
+            const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
+
+            let obfuscatedCode: string;
+
+            before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
                     readFileAsString(__dirname + '/fixtures/input-1.js'),
                     {
@@ -38,19 +42,20 @@ describe('FunctionControlFlowTransformer', () => {
                         controlFlowFlatteningThreshold: 1
                     }
                 );
-                const obfuscatedCode: string = obfuscationResult.getObfuscatedCode();
-                const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
 
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('should add `control flow storage` node to the obfuscated code', () => {
                 assert.match(obfuscatedCode, regexp);
             });
         });
 
-        describe('variant #2 - two `control flow storage` nodes: root and inner', function () {
-            this.timeout(100000);
+        describe('variant #2 - two `control flow storage` nodes: root and inner', () => {
+            const expectedAppendToScopeThreshold: number = 0.5;
 
             const samplesCount: number = 1000;
             const delta: number = 0.1;
-            const expectedValue: number = 0.5;
 
             const regExp1: RegExp = new RegExp(
                 `\\(function\\(\\) *\\{ *${rootControlFlowStorageNodeMatch}`,
@@ -61,10 +66,13 @@ describe('FunctionControlFlowTransformer', () => {
                 'g'
             );
 
-            let obfuscationResult: IObfuscationResult,
-                totalValue: number = 0;
+            let appendToScopeThreshold: number = 0;
 
             before(() => {
+                let obfuscationResult: IObfuscationResult,
+                    obfuscatedCode: string,
+                    totalValue: number = 0;
+
                 for (let i = 0; i < samplesCount; i++) {
                     obfuscationResult = JavaScriptObfuscator.obfuscate(
                         readFileAsString(__dirname + '/fixtures/input-2.js'),
@@ -74,7 +82,6 @@ describe('FunctionControlFlowTransformer', () => {
                             controlFlowFlatteningThreshold: 1
                         }
                     );
-
                     obfuscatedCode = obfuscationResult.getObfuscatedCode();
 
                     if (regExp1.test(obfuscatedCode)) {
@@ -85,10 +92,12 @@ describe('FunctionControlFlowTransformer', () => {
                         }
                     }
                 }
+
+                appendToScopeThreshold = (totalValue - samplesCount) / samplesCount;
             });
 
             it('should add two `control flow storage` nodes (root and inner) to the obfuscated code in different scopes', () => {
-                assert.closeTo((totalValue - samplesCount) / samplesCount, expectedValue, delta);
+                assert.closeTo(appendToScopeThreshold, expectedAppendToScopeThreshold, delta);
             });
         });
 
@@ -103,6 +112,8 @@ describe('FunctionControlFlowTransformer', () => {
                     `\\}` +
                 `\\};`
             );
+
+            let obfuscatedCode: string;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -122,8 +133,10 @@ describe('FunctionControlFlowTransformer', () => {
             });
         });
 
-        describe('variant #4 - no `control flow storage` node to the root block scope', () => {
+        describe('variant #4 - transformed node in the root block scope', () => {
             const regExp: RegExp = /^var *test *= *0x1 *\+ *0x2;$/;
+
+            let obfuscatedCode: string;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -138,14 +151,14 @@ describe('FunctionControlFlowTransformer', () => {
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('should\'t add control flow storage node when transformed node in the root block scope', () => {
+            it('should\'t add control flow storage node', () => {
                 assert.match(obfuscatedCode, regExp);
             });
         });
 
-        describe('variant #5 - no `control flow storage` node in the root block scope', () => {
-            const samplesCount: number = 20;
+        describe('variant #5 - transformed nodes not in the root block scope', () => {
             const expectedValue: number = 0;
+            const samplesCount: number = 20;
 
             const regExp: RegExp = new RegExp(
                 `var *[a-zA-Z]{6} *= *\\{` +
@@ -175,14 +188,16 @@ describe('FunctionControlFlowTransformer', () => {
                 }
             });
 
-            it('should\'t add control flow storage node to the root block scope when transformed nodes not in the root block scope', () => {
+            it('should\'t add control flow storage node to the root block scope', () => {
                 assert.equal(totalValue, expectedValue);
             });
         });
 
-        describe('variant #6 - no single `control flow storage` node when threshold is 0', () => {
-            const controlFlowStorageMatch: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
+        describe('variant #6 - threshold is `0`', () => {
             const regexp: RegExp = /var *_0x([a-f0-9]){4,6} *= *0x1 *\+ *0x2;/;
+            const controlFlowStorageRegExp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
+
+            let obfuscatedCode: string;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -197,15 +212,20 @@ describe('FunctionControlFlowTransformer', () => {
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('shouldn\'t add `control flow storage` node to the obfuscated code when threshold is 0', () => {
+            it('shouldn\'t add call to control flow storage node to the obfuscated code', () => {
                 assert.match(obfuscatedCode, regexp);
-                assert.notMatch(obfuscatedCode, controlFlowStorageMatch);
+            });
+
+            it('shouldn\'t add `control flow storage` node to the obfuscated code', () => {
+                assert.notMatch(obfuscatedCode, controlFlowStorageRegExp);
             });
         });
 
         describe('arrow function expression', () => {
             describe('variant #1 - arrow function expression with body', () => {
                 const regexp: RegExp = new RegExp(rootControlFlowStorageNodeMatch);
+
+                let obfuscatedCode: string;
 
                 before(() => {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -227,6 +247,8 @@ describe('FunctionControlFlowTransformer', () => {
 
             describe('variant #2 - arrow function expression without body', () => {
                 const regexp: RegExp = new RegExp(`var *${variableMatch} *= *\\(\\) *=> *0x1 *\\+ *0x2;`);
+
+                let obfuscatedCode: string;
 
                 before(() => {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
