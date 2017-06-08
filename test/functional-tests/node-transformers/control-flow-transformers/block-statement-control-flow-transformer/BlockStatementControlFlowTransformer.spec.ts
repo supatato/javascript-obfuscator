@@ -64,13 +64,12 @@ describe('BlockStatementControlFlowTransformer', () => {
 
             describe('block statement statements', () => {
                 const switchCaseRegExp: RegExp = /switch *\(_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\+\+\]\) *\{/;
+                const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
                 const expectedSwitchCaseLength: number = 5;
 
                 let switchCaseLength: number;
 
                 before(() => {
-                    const switchCaseLengthRegExp: RegExp = /case *'[0-5]': *console\['log'\]\(0x[0-6]\);/g;
-
                     switchCaseLength = obfuscatedCode.match(switchCaseLengthRegExp)!.length;
                 });
 

@@ -8,12 +8,14 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator';
 
-describe('LogicalExpressionControlFlowReplacer', () => {
-    let obfuscatedCode: string;
+describe('LogicalExpressionControlFlowReplacer', function () {
+    this.timeout(100000);
 
     describe('replace (logicalExpressionNode: ESTree.LogicalExpression,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
         describe('variant #1 - single logical expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\]\(!!\[\], *!\[\]\);/;
+
+            let obfuscatedCode: string;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -28,29 +30,33 @@ describe('LogicalExpressionControlFlowReplacer', () => {
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('should replace logical expression node by call to control flow storage node', () => {
+            it('should replace logical expression node with call to control flow storage node', () => {
                 assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
             });
         });
 
-        describe('variant #2 - multiple logical expressions with threshold = 1', function () {
-            this.timeout(60000);
+        describe('variant #2 - multiple logical expressions with threshold = 1', () => {
+            const expectedMatchErrorsCount: number = 0;
+            const expectedChance: number = 0.5;
 
             const samplesCount: number = 1000;
-            const expectedValue: number = 0.5;
             const delta: number = 0.1;
 
-            const controlFlowStorageCallRegExp1: RegExp = /var *_0x([a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(!!\[\], *!\[\]\);/;
-            const controlFlowStorageCallRegExp2: RegExp = /var *_0x([a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(!\[\], *!!\[\]\);/;
+            const controlFlowStorageCallRegExp1: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(!!\[\], *!\[\]\);/;
+            const controlFlowStorageCallRegExp2: RegExp = /var *_0x(?:[a-f0-9]){4,6} *= *(_0x([a-f0-9]){4,6}\['\w{3}'\])\(!\[\], *!!\[\]\);/;
 
-            let equalsValue: number = 0,
-                obfuscationResult: IObfuscationResult,
-                firstMatchArray: RegExpMatchArray | null,
-                secondMatchArray: RegExpMatchArray | null,
-                firstMatch: string | undefined,
-                secondMatch: string | undefined;
+            let matchErrorsCount: number = 0,
+                usingExistingIdentifierChance: number;
 
-            it('should replace logical expression node by call to control flow storage node', () => {
+            before(() => {
+                let obfuscationResult: IObfuscationResult,
+                    obfuscatedCode: string,
+                    firstMatchArray: RegExpMatchArray | null,
+                    secondMatchArray: RegExpMatchArray | null,
+                    firstMatch: string | undefined,
+                    secondMatch: string | undefined,
+                    equalsValue: number = 0;
+
                 for (let i = 0; i < samplesCount; i++) {
                     obfuscationResult = JavaScriptObfuscator.obfuscate(
                         readFileAsString(__dirname + '/fixtures/input-2.js'),
@@ -66,23 +72,36 @@ describe('LogicalExpressionControlFlowReplacer', () => {
                     firstMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp1);
                     secondMatchArray = obfuscatedCode.match(controlFlowStorageCallRegExp2);
 
-                    firstMatch = firstMatchArray ? firstMatchArray[2] : undefined;
-                    secondMatch = secondMatchArray ? secondMatchArray[2] : undefined;
+                    if (!firstMatchArray || !secondMatchArray) {
+                        matchErrorsCount++;
 
-                    assert.match(obfuscatedCode, controlFlowStorageCallRegExp1);
-                    assert.match(obfuscatedCode, controlFlowStorageCallRegExp2);
+                        continue;
+                    }
+
+                    firstMatch = firstMatchArray ? firstMatchArray[1] : undefined;
+                    secondMatch = secondMatchArray ? secondMatchArray[1] : undefined;
 
                     if (firstMatch === secondMatch) {
                         equalsValue++;
                     }
                 }
 
-                assert.closeTo(equalsValue / samplesCount, expectedValue, delta);
+                usingExistingIdentifierChance = equalsValue / samplesCount;
+            });
+
+            it('should replace logical expression node by call to control flow storage node', () => {
+                assert.equal(matchErrorsCount, expectedMatchErrorsCount);
+            });
+
+            it('should use existing identifier for control flow storage with expected chance', () => {
+                assert.closeTo(usingExistingIdentifierChance, expectedChance, delta);
             });
         });
 
         describe('variant #3 - single logical expression with unary expression', () => {
             const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\]\(!_0x([a-f0-9]){4,6}, *!_0x([a-f0-9]){4,6}\);/;
+
+            let obfuscatedCode: string;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -97,13 +116,15 @@ describe('LogicalExpressionControlFlowReplacer', () => {
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
             });
 
-            it('should replace logical expression node with unary expression by call to control flow storage node', () => {
+            it('should replace logical unary expression with call to control flow storage node', () => {
                 assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
             });
         });
 
         describe('prohibited nodes variant #1', () => {
             const regExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\[_0x([a-f0-9]){4,6}\] *&& *!\[\];/;
+
+            let obfuscatedCode: string;
 
             before(() => {
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(

@@ -9,11 +9,11 @@ import { readFileAsString } from '../../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../../src/JavaScriptObfuscator';
 
 describe('StringLiteralControlFlowReplacer', () => {
-    let obfuscatedCode: string;
-
     describe('replace (literalNode: ESTree.Literal,parentNode: ESTree.Node,controlFlowStorage: IStorage <ICustomNode>)', () => {
         const controlFlowStorageStringLiteralRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *\{'\w{3}' *: *'test'\};/;
         const controlFlowStorageCallRegExp: RegExp = /var *_0x([a-f0-9]){4,6} *= *_0x([a-f0-9]){4,6}\['\w{3}'\];/;
+
+        let obfuscatedCode: string;
 
         before(() => {
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -32,7 +32,7 @@ describe('StringLiteralControlFlowReplacer', () => {
             assert.match(obfuscatedCode, controlFlowStorageStringLiteralRegExp);
         });
 
-        it('should replace string literal node by call to control flow storage node', () => {
+        it('should replace string literal node with call to control flow storage node', () => {
             assert.match(obfuscatedCode, controlFlowStorageCallRegExp);
         });
     });
