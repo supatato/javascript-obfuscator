@@ -15,8 +15,10 @@ describe('StringArrayCallsWrapper', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -36,8 +38,10 @@ describe('StringArrayCallsWrapper', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: false

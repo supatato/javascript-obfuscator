@@ -22,8 +22,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/input-1.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -110,8 +111,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-2.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/input-2.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -202,8 +204,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/one-statement.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/one-statement.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -225,8 +228,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/const-declaration.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/const-declaration.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -248,8 +252,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/let-declaration.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/let-declaration.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -271,8 +276,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/break-statement.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/break-statement.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -294,8 +300,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/continue-statement.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/continue-statement.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -317,8 +324,9 @@ describe('BlockStatementControlFlowTransformer', () => {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/function-declaration.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/function-declaration.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -347,8 +355,9 @@ describe('BlockStatementControlFlowTransformer', () => {
                 untouchedStatementPercentage: number;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/input-1.js').repeat(samples),
+                    code.repeat(samples),
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,

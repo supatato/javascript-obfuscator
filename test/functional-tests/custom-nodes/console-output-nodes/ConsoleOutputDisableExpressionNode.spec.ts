@@ -17,8 +17,9 @@ describe('ConsoleOutputDisableExpressionNode', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     disableConsoleOutput: true
@@ -45,8 +46,9 @@ describe('ConsoleOutputDisableExpressionNode', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     disableConsoleOutput: false

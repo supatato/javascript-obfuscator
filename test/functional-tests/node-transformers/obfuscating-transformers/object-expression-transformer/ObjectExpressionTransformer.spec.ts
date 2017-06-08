@@ -10,8 +10,10 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('ObjectExpressionTransformer', () => {
     it('should replace object expression node `key` property with identifier value by property with literal value', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -21,8 +23,10 @@ describe('ObjectExpressionTransformer', () => {
     });
 
     it('should correct convert shorthand ES6 object expression to non-shorthand object expression', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/shorthand-object-expression.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/shorthand-object-expression.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }

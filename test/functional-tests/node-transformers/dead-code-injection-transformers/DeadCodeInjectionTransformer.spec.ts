@@ -14,8 +14,9 @@ describe('DeadCodeInjectionTransformer', () => {
 
     describe('transformNode (programNode: ESTree.Program, parentNode: ESTree.Node): ESTree.Node', () => {
         describe('variant #1 - 5 simple block statements', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/input-1.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     deadCodeInjection: true,
@@ -42,8 +43,9 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('variant #2 - 4 simple block statements', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/block-statements-min-count.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/block-statements-min-count.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     deadCodeInjection: true,
@@ -68,8 +70,9 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('variant #3 - deadCodeInjectionThreshold: 0', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/input-1.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     deadCodeInjection: true,
@@ -94,8 +97,9 @@ describe('DeadCodeInjectionTransformer', () => {
         });
 
         describe('variant #4 - break or continue statement in block statement', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/break-continue-statement.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/break-continue-statement.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     deadCodeInjection: true,
@@ -180,8 +184,9 @@ describe('DeadCodeInjectionTransformer', () => {
             let count4: number = 0;
 
             for (let i = 0; i < samplesCount; i++) {
+                const code: string = readFileAsString(__dirname + '/fixtures/if-statement-variants-distribution.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/if-statement-variants-distribution.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         deadCodeInjection: true,

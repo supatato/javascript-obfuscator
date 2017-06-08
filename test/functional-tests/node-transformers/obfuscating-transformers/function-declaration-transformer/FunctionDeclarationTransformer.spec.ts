@@ -13,8 +13,9 @@ describe('FunctionDeclarationTransformer', () => {
 
     describe('transformation of `functionDeclaration` node names', () => {
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }

@@ -15,8 +15,9 @@ describe('DomainLockNode', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     domainLock: ['.example.com']
@@ -35,8 +36,9 @@ describe('DomainLockNode', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     domainLock: []

@@ -9,7 +9,7 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('MethodDefinitionTransformer', () => {
-    let code: string = readFileAsString(__dirname + '/fixtures/input.js');
+    const code: string = readFileAsString(__dirname + '/fixtures/input.js');
 
     it('should replace method definition node `key` property with unicode value', () => {
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(

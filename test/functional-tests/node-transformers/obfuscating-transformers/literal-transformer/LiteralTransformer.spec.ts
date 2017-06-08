@@ -11,8 +11,10 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 describe('LiteralTransformer', () => {
     describe('transformation of literal node with string value', () => {
         it('should replace literal node value with value from string array', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -28,8 +30,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('shouldn\'t replace literal node value with value from string array if `stringArray` option is disabled', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -42,8 +46,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('should\'t throw an error when string contains non-latin and non-digit characters and `unicodeEscapeSequence` is disabled', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/error-when-non-latin.js');
+
             assert.doesNotThrow(() => JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/error-when-non-latin.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -53,8 +59,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('should create only one item in string array for same literal node values', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/same-literal-values.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/same-literal-values.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -70,8 +78,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('should replace literal node value with unicode escape sequence if `unicodeEscapeSequence` is enabled', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     unicodeEscapeSequence: true
@@ -83,8 +93,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('should replace literal node value with unicode escape sequence from string array if `unicodeEscapeSequence` is enabled', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -101,8 +113,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('shouldn\'t replace short literal node value with value from string array', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/short-literal-value.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/short-literal-value.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -114,8 +128,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('should replace literal node value with value from string array encoded using base64', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -132,8 +148,10 @@ describe('LiteralTransformer', () => {
         });
 
         it('should replace literal node value with value from string array encoded using rc4', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -152,8 +170,10 @@ describe('LiteralTransformer', () => {
             const samples: number = 1000;
             const stringArrayThreshold: number = 0.5;
             const delta: number = 0.1;
+
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                `${readFileAsString(__dirname + '/fixtures/simple-input.js')}\n`.repeat(samples),
+                `${code}\n`.repeat(samples),
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -172,8 +192,10 @@ describe('LiteralTransformer', () => {
     });
 
     it('should transform literal node with boolean value', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/boolean-value.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/boolean-value.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,
@@ -185,8 +207,10 @@ describe('LiteralTransformer', () => {
     });
 
     it('should transform literal node with number value', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/number-value.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/number-value.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,
@@ -198,8 +222,10 @@ describe('LiteralTransformer', () => {
     });
 
     it('should keep safe value of RegExp literal', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/regexp-literal.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/regexp-literal.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET,
                 stringArray: true,

@@ -16,8 +16,9 @@ describe('CatchClauseTransformer', () => {
         const bodyParamNameRegExp: RegExp = /console\['log'\]\((_0x([a-f0-9]){4,6})\);/;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -46,8 +47,9 @@ describe('CatchClauseTransformer', () => {
 
     describe('object pattern as parameter', () => {
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }

@@ -34,8 +34,9 @@ describe('FunctionControlFlowTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/input-1.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -69,13 +70,15 @@ describe('FunctionControlFlowTransformer', function () {
             let appendToScopeThreshold: number = 0;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-2.js');
+
                 let obfuscationResult: IObfuscationResult,
                     obfuscatedCode: string,
                     totalValue: number = 0;
 
                 for (let i = 0; i < samplesCount; i++) {
                     obfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/input-2.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             controlFlowFlattening: true,
@@ -116,8 +119,9 @@ describe('FunctionControlFlowTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/multiple-items.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/multiple-items.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -139,8 +143,9 @@ describe('FunctionControlFlowTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/root-block-scope-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/root-block-scope-1.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -168,12 +173,14 @@ describe('FunctionControlFlowTransformer', function () {
                 `\\};`
             );
 
+            const code: string = readFileAsString(__dirname + '/fixtures/root-block-scope-2.js');
+
             let totalValue: number = 0;
 
             before(() => {
                 for (let i = 0; i < samplesCount; i++) {
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/root-block-scope-2.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             controlFlowFlattening: true,
@@ -200,8 +207,9 @@ describe('FunctionControlFlowTransformer', function () {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/zero-threshold.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/zero-threshold.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -228,8 +236,9 @@ describe('FunctionControlFlowTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/arrow-function-expression-with-body.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/arrow-function-expression-with-body.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             controlFlowFlattening: true,
@@ -251,8 +260,9 @@ describe('FunctionControlFlowTransformer', function () {
                 let obfuscatedCode: string;
 
                 before(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/arrow-function-expression-without-body.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/arrow-function-expression-without-body.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             controlFlowFlattening: true,

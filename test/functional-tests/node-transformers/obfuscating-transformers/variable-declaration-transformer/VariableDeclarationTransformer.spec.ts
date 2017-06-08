@@ -10,8 +10,10 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('VariableDeclarationTransformer', () => {
     it('should transform `variableDeclaration` node', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/simple-declaration.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/simple-declaration.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -22,8 +24,10 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     it('should not transform `variableDeclaration` node if parent block scope node is `Program` node', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/parent-block-scope-is-program-node.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -34,8 +38,10 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     it('should transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `var` kind', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/var-kind.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/var-kind.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -45,8 +51,10 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     it('should not transform variable call (`identifier` node) outside of block scope of node in which this variable was declared with `let` kind', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/let-kind.js');
+
         let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/let-kind.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -59,8 +67,10 @@ describe('VariableDeclarationTransformer', () => {
         let obfuscationResult: IObfuscationResult;
 
         beforeEach(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-1.js');
+
             obfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-1.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -77,8 +87,9 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe(`variable calls before variable declaration when function param has the same name as variables name`, () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-2.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -122,8 +133,9 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe(`variable calls before variable declaration when catch clause param has the same name as variables name`, () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-3.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/variable-call-before-variable-declaration-3.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -168,8 +180,10 @@ describe('VariableDeclarationTransformer', () => {
 
     describe('wrong replacement', () => {
         it('shouldn\'t replace property node identifier', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/property-identifier.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/property-identifier.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -179,8 +193,10 @@ describe('VariableDeclarationTransformer', () => {
         });
 
         it('shouldn\'t replace computed member expression identifier', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/member-expression-identifier.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/member-expression-identifier.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -191,8 +207,9 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe('object pattern as variable declarator', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/object-pattern.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -209,8 +226,9 @@ describe('VariableDeclarationTransformer', () => {
     });
 
     describe('array pattern as variable declarator', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/array-pattern.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/array-pattern.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }

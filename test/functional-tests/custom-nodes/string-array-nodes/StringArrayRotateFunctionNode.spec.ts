@@ -15,8 +15,10 @@ describe('StringArrayRotateFunctionNode', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     rotateStringArray: true,
@@ -37,8 +39,10 @@ describe('StringArrayRotateFunctionNode', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     rotateStringArray: false,

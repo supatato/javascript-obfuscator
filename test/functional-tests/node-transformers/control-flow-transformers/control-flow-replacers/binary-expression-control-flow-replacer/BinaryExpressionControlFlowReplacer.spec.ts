@@ -18,8 +18,9 @@ describe('BinaryExpressionControlFlowReplacer', function () {
             let obfuscatedCode: string;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/input-1.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         controlFlowFlattening: true,
@@ -49,6 +50,8 @@ describe('BinaryExpressionControlFlowReplacer', function () {
                 usingExistingIdentifierChance: number;
 
             before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/input-2.js');
+
                 let obfuscationResult: IObfuscationResult,
                     obfuscatedCode: string,
                     firstMatchArray: RegExpMatchArray | null,
@@ -59,7 +62,7 @@ describe('BinaryExpressionControlFlowReplacer', function () {
 
                 for (let i = 0; i < samplesCount; i++) {
                     obfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/input-2.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             controlFlowFlattening: true,

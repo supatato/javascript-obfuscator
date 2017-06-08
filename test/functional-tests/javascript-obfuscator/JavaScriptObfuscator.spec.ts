@@ -21,8 +21,9 @@ describe('JavaScriptObfuscator', () => {
                 sourceMap: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/simple-input-1.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET
                     }
@@ -45,8 +46,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/empty-input.js'),
+                    code,
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
@@ -61,8 +63,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/comments-only.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/comments-only.js'),
+                    code,
                 );
 
                 obfuscatedCode = obfuscationResult.getObfuscatedCode();
@@ -79,8 +82,9 @@ describe('JavaScriptObfuscator', () => {
                     sourceMap: string;
 
                 beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/simple-input-1.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             sourceMap: true
@@ -107,8 +111,9 @@ describe('JavaScriptObfuscator', () => {
                     sourceMap: string;
 
                 beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/simple-input-1.js'),
+                        code,
                         {
                             ...NO_CUSTOM_NODES_PRESET,
                             sourceMap: true,
@@ -140,8 +145,9 @@ describe('JavaScriptObfuscator', () => {
                     sourceMapMappings: string;
 
                 beforeEach(() => {
+                    const code: string = readFileAsString(__dirname + '/fixtures/empty-input.js');
                     const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                        readFileAsString(__dirname + '/fixtures/empty-input.js'),
+                        code,
                         {
                             sourceMap: true
                         }
@@ -180,8 +186,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input-1.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/simple-input-1.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET
                     }
@@ -201,8 +208,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/block-scope.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/block-scope.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET
                     }
@@ -223,8 +231,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input-2.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/simple-input-2.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         stringArray: true,
@@ -251,8 +260,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/simple-input-cyrillic.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET,
                         stringArray: true,
@@ -382,8 +392,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/new-target.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/new-target.js'),
+                    code,
                     {
                         ...NO_CUSTOM_NODES_PRESET
                     }
@@ -403,8 +414,9 @@ describe('JavaScriptObfuscator', () => {
             let obfuscatedCode: string;
 
             beforeEach(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/mangle.js');
                 const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                    readFileAsString(__dirname + '/fixtures/mangle.js'),
+                    code,
                     {
                         mangle: true
                     }

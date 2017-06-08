@@ -10,8 +10,9 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('FunctionTransformer', () => {
     describe('identifiers transformation inside `FunctionDeclaration` and `FunctionExpression` node body', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/input.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/input.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -36,8 +37,9 @@ describe('FunctionTransformer', () => {
     });
 
     describe('object pattern as parameter', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/object-pattern-as-parameter.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
@@ -55,8 +57,9 @@ describe('FunctionTransformer', () => {
 
     describe('assignment pattern as parameter', () => {
         describe('literal as right value', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-1.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-1.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -73,8 +76,9 @@ describe('FunctionTransformer', () => {
         });
 
         describe('identifier as right value', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-2.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-2.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -107,8 +111,9 @@ describe('FunctionTransformer', () => {
         });
 
         describe('identifier as right value', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-3.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/assignment-pattern-as-parameter-3.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -151,8 +156,9 @@ describe('FunctionTransformer', () => {
     });
 
     describe('array pattern as parameter', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/array-pattern-as-parameter.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/array-pattern-as-parameter.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }

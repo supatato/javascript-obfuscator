@@ -11,8 +11,9 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 describe('TemplateLiteralTransformer', () => {
     describe('variant #1: simple template literal', () => {
         it('should transform es6 template literal to es5', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/simple-input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/simple-input.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     unicodeEscapeSequence: false
@@ -25,8 +26,9 @@ describe('TemplateLiteralTransformer', () => {
 
     describe('variant #1: simple template literal with expression only', () => {
         it('should transform es6 template literal to es5 and add empty literal node before expression node', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/expression-only.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/expression-only.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     unicodeEscapeSequence: false
@@ -39,8 +41,9 @@ describe('TemplateLiteralTransformer', () => {
 
     describe('variant #3: literal node inside expression', () => {
         it('should transform es6 template literal to es5', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/literal-inside-expression.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/literal-inside-expression.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     unicodeEscapeSequence: false
@@ -53,8 +56,9 @@ describe('TemplateLiteralTransformer', () => {
 
     describe('variant #4: multiple expressions', () => {
         it('should transform es6 template literal to es5', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/multiple-expressions.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/multiple-expressions.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     unicodeEscapeSequence: false

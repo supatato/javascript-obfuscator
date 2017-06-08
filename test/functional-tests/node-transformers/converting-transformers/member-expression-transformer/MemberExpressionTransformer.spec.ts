@@ -11,8 +11,10 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 describe('MemberExpressionTransformer', () => {
     describe('transformation of member expression node with dot notation', () => {
         it('should replace member expression dot notation call by square brackets call with unicode literal value', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/dot-notation-call.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/dot-notation-call.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }
@@ -22,8 +24,10 @@ describe('MemberExpressionTransformer', () => {
         });
 
         it('should replace member expression dot notation call by square brackets call to unicode array', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/dot-notation-call.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/dot-notation-call.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -38,8 +42,10 @@ describe('MemberExpressionTransformer', () => {
 
     describe('transformation of member expression node without dot notation', () => {
         it('should replace member expression square brackets call by square brackets call to unicode array', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/square-brackets-call.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/square-brackets-call.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     stringArray: true,
@@ -52,8 +58,10 @@ describe('MemberExpressionTransformer', () => {
         });
 
         it('should ignore square brackets call with identifier value', () => {
+            const code: string = readFileAsString(__dirname + '/fixtures/square-brackets-with-identifier-call.js');
+
             let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/square-brackets-with-identifier-call.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET
                 }

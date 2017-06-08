@@ -16,8 +16,9 @@ describe('StringLiteralControlFlowReplacer', () => {
         let obfuscatedCode: string;
 
         before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/input-1.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-                readFileAsString(__dirname + '/fixtures/input-1.js'),
+                code,
                 {
                     ...NO_CUSTOM_NODES_PRESET,
                     controlFlowFlattening: true,

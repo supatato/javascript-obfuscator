@@ -10,8 +10,9 @@ import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('LabeledStatementTransformer', () => {
     describe('changeControlFlow (labeledStatementNode: ESTree.LabeledStatement): void', () => {
+        const code: string = readFileAsString(__dirname + '/fixtures/input.js');
         const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            readFileAsString(__dirname + '/fixtures/input.js'),
+            code,
             {
                 ...NO_CUSTOM_NODES_PRESET
             }
