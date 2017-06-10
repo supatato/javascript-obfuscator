@@ -3,7 +3,7 @@ import * as mkdirp from 'mkdirp';
 
 import { assert } from 'chai';
 
-import { CLIUtils } from '../../../../src/cli/CLIUtils';
+import { CLIUtils } from '../../../../src/cli/utils/CLIUtils';
 
 describe('CLIUtils', () => {
     const fileContent: string = 'test';

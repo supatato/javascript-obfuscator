@@ -16,7 +16,9 @@ const getStatementRegExp: (hexNumber: string) => RegExp = (hexNumber) => {
     return new RegExp(`console\\['log'\\]\\(${hexNumber}\\);`);
 };
 
-describe('BlockStatementControlFlowTransformer', () => {
+describe('BlockStatementControlFlowTransformer', function () {
+    this.timeout(100000);
+
     describe('transformNode (blockStatementNode: ESTree.BlockStatement): ESTree.Node', () => {
         describe('variant #1: 5 simple statements', () => {
             let obfuscatedCode: string;
