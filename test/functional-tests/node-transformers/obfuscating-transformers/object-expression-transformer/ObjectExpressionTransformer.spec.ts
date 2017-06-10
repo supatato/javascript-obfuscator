@@ -9,32 +9,47 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('ObjectExpressionTransformer', () => {
-    it('should replace object expression node `key` property with identifier value by property with literal value', () => {
-        const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
+    describe('default behaviour', () => {
+        const regExp: RegExp = /var *test *= *\{'foo':0x0\};/;
 
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            code,
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
+        let obfuscatedCode: string;
 
-        assert.match(obfuscationResult.getObfuscatedCode(),  /var *test *= *\{'foo':0x0\};/);
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/property-with-identifier-value.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+       });
+
+        it('should replace object expression node `key` property with identifier value by property with literal value', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
     });
 
-    it('should correct convert shorthand ES6 object expression to non-shorthand object expression', () => {
-        const code: string = readFileAsString(__dirname + '/fixtures/shorthand-object-expression.js');
+    describe('shorthand ES6 object expression', () => {
+        const regExp: RegExp = /var *_0x[a-f0-9]{4,6} *= *\{'a': *_0x[a-f0-9]{4,6}\, *'b': *_0x[a-f0-9]{4,6}\};/;
 
-        let obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
-            code,
-            {
-                ...NO_CUSTOM_NODES_PRESET
-            }
-        );
+        let obfuscatedCode: string;
 
-        assert.match(
-            obfuscationResult.getObfuscatedCode(),
-            /var *_0x[a-f0-9]{4,6} *= *\{'a': *_0x[a-f0-9]{4,6}\, *'b': *_0x[a-f0-9]{4,6}\};/
-        );
+        before(() => {
+            const code: string = readFileAsString(__dirname + '/fixtures/shorthand-object-expression.js');
+            const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                code,
+                {
+                    ...NO_CUSTOM_NODES_PRESET
+                }
+            );
+
+            obfuscatedCode = obfuscationResult.getObfuscatedCode();
+        });
+
+        it('should correct convert shorthand ES6 object expression to non-shorthand object expression', () => {
+            assert.match(obfuscatedCode, regExp);
+        });
     });
 });
