@@ -9,9 +9,9 @@ import { readFileAsString } from '../../../../helpers/readFileAsString';
 import { JavaScriptObfuscator } from '../../../../../src/JavaScriptObfuscator';
 
 describe('FunctionDeclarationTransformer', () => {
-    let obfuscatedCode: string;
-
     describe('transformation of `functionDeclaration` node names', () => {
+        let obfuscatedCode: string;
+
         before(() => {
             const code: string = readFileAsString(__dirname + '/fixtures/input.js');
             const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
@@ -24,28 +24,48 @@ describe('FunctionDeclarationTransformer', () => {
             obfuscatedCode = obfuscationResult.getObfuscatedCode();
         });
 
-        it('shouldn\'t transform function name if `functionDeclaration` parent block scope is a `ProgramNode`', () => {
-            const functionNameIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/function *foo *\(\) *\{/);
-            const functionCallIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/foo *\( *\);/);
+        describe('variant #1: `functionDeclaration` parent block scope is not a `ProgramNode`', () => {
+            const functionNameIdentifierRegExp: RegExp = /function *_0x[a-f0-9]{4,6} *\(\) *\{/;
+            const functionCallIdentifierRegExp: RegExp = /_0x[a-f0-9]{4,6} *\( *\);/;
 
-            const functionParamIdentifierName: string = (<RegExpMatchArray>functionNameIdentifierMatch)[1];
-            const functionBodyIdentifierName: string = (<RegExpMatchArray>functionCallIdentifierMatch)[1];
+            let functionParamIdentifierName: string,
+                functionBodyIdentifierName: string;
 
-            assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
+            before(() => {
+                const functionNameIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionNameIdentifierRegExp);
+                const functionCallIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionCallIdentifierRegExp);
+
+                functionParamIdentifierName = (<RegExpMatchArray>functionNameIdentifierMatch)[1];
+                functionBodyIdentifierName = (<RegExpMatchArray>functionCallIdentifierMatch)[1];
+            });
+
+            it('should transform function name', () => {
+                assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
+            });
         });
 
-        it('should transform function name if `functionDeclaration` parent block scope is not a `ProgramNode`', () => {
-            const functionNameIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/function *_0x[a-f0-9]{4,6} *\(\) *\{/);
-            const functionCallIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
-                .match(/_0x[a-f0-9]{4,6} *\( *\);/);
+        describe('variant #2: `functionDeclaration` parent block scope is a `ProgramNode`', () => {
+            const functionNameIdentifierRegExp: RegExp = /function *foo *\(\) *\{/;
+            const functionCallIdentifierRegExp: RegExp = /foo *\( *\);/;
 
-            const functionParamIdentifierName: string = (<RegExpMatchArray>functionNameIdentifierMatch)[1];
-            const functionBodyIdentifierName: string = (<RegExpMatchArray>functionCallIdentifierMatch)[1];
+            let functionParamIdentifierName: string,
+                functionBodyIdentifierName: string;
 
-            assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
+            before(() => {
+                const functionNameIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionNameIdentifierRegExp);
+                const functionCallIdentifierMatch: RegExpMatchArray|null = obfuscatedCode
+                    .match(functionCallIdentifierRegExp);
+
+                functionParamIdentifierName = (<RegExpMatchArray>functionNameIdentifierMatch)[1];
+                functionBodyIdentifierName = (<RegExpMatchArray>functionCallIdentifierMatch)[1];
+            });
+
+            it('shouldn\'t transform function name', () => {
+                assert.equal(functionParamIdentifierName, functionBodyIdentifierName);
+            });
         });
     });
 });
