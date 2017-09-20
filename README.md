@@ -6,6 +6,8 @@
 
 # JavaScript obfuscator for Node.js
 
+![logo](https://raw.githubusercontent.com/javascript-obfuscator/javascript-obfuscator/master/images/logo.png)
+
 JavaScript obfuscator is a powerful free obfuscator for JavaScript and Node.js with a wide number of features which provides protection for your source code.
 
 * has no limits or restrictions
@@ -21,6 +23,7 @@ Example of obfuscated code: [gist.github.com](https://gist.github.com/sanex3339/
 * Webpack: [webpack-obfuscator](https://github.com/javascript-obfuscator/webpack-obfuscator)
 * Gulp: [gulp-javascript-obfuscator](https://github.com/javascript-obfuscator/gulp-javascript-obfuscator)
 * Grunt: [grunt-contrib-obfuscator](https://github.com/javascript-obfuscator/grunt-contrib-obfuscator)
+* Rollup: [rollup-plugin-javascript-obfuscator](https://github.com/javascript-obfuscator/rollup-plugin-javascript-obfuscator)
 
 [![npm version](https://badge.fury.io/js/javascript-obfuscator.svg)](https://badge.fury.io/js/javascript-obfuscator)
 [![Build Status](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator.svg?branch=master)](https://travis-ci.org/javascript-obfuscator/javascript-obfuscator)
@@ -197,6 +200,29 @@ javascript-obfuscator samples/sample.js --output output/output.js --compact true
 ```
 
 See [CLI options](#cli-options).
+
+## Conditional comments
+You can disable and enable obfuscation for specific parts of the code by adding following comments: 
+* disable: `// javascript-obfuscator:disable` or `/* javascript-obfuscator:disable */`;
+* enable: `// javascript-obfuscator:enable` or `/* javascript-obfuscator:enable */`.
+
+Example:
+```javascript
+// input
+var foo = 1;
+// javascript-obfuscator:disable
+var bar = 2;
+
+// output
+var _0xabc123 = 0x1;
+var bar = 2;
+```
+Conditional comments affect only direct transformations of AST-tree nodes. All child transformations still will be applied to the AST-tree nodes. 
+
+For example:
+* Obfuscation of the variable's name at its declaration is called direct transformation;
+* Obfuscation of the variable's name beyond its declaration is called child transformation.
+
 
 ## JavaScript Obfuscator Options
 

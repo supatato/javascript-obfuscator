@@ -6,7 +6,7 @@ import { NO_CUSTOM_NODES_PRESET } from '../../../../src/options/presets/NoCustom
 
 import { readFileAsString } from '../../../helpers/readFileAsString';
 
-import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscator';
+import { JavaScriptObfuscator } from '../../../../src/JavaScriptObfuscatorFacade';
 
 describe('DeadCodeInjectionTransformer', () => {
     const variableMatch: string = '_0x([a-f0-9]){4,6}';
@@ -277,6 +277,36 @@ describe('DeadCodeInjectionTransformer', () => {
 
             it('variant #4: `IfStatement` variant should have distribution close to `0.25`', () => {
                 assert.closeTo(distribution4, expectedDistribution, delta);
+            });
+        });
+
+        describe('variant #6 - block scope of block statement is `ProgramNode`', () => {
+            const regExp: RegExp = new RegExp(
+                `if *\\(!!\\[\\]\\) *{` +
+                    `console\\[${variableMatch}\\('${hexMatch}'\\)\\]\\(${variableMatch}\\('${hexMatch}'\\)\\);` +
+                `\\}`
+            );
+
+            let obfuscatedCode: string;
+
+            before(() => {
+                const code: string = readFileAsString(__dirname + '/fixtures/block-scope-is-program-node.js');
+                const obfuscationResult: IObfuscationResult = JavaScriptObfuscator.obfuscate(
+                    code,
+                    {
+                        ...NO_CUSTOM_NODES_PRESET,
+                        stringArray: true,
+                        stringArrayThreshold: 1,
+                        deadCodeInjection: true,
+                        deadCodeInjectionThreshold: 1
+                    }
+                );
+
+                obfuscatedCode = obfuscationResult.getObfuscatedCode();
+            });
+
+            it('shouldn\'t add dead code in block statements with `ProgramNode` block scope', () => {
+                assert.match(obfuscatedCode, regExp);
             });
         });
     });

@@ -8,11 +8,11 @@ import { ICustomNode } from '../../../interfaces/custom-nodes/ICustomNode';
 import { IObfuscationEventEmitter } from '../../../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IOptions } from '../../../interfaces/options/IOptions';
 import { IRandomGenerator } from '../../../interfaces/utils/IRandomGenerator';
-import { IStackTraceData } from '../../../interfaces/stack-trace-analyzer/IStackTraceData';
+import { IStackTraceData } from '../../../interfaces/analyzers/stack-trace-analyzer/IStackTraceData';
 
 import { initializable } from '../../../decorators/Initializable';
 
-import { CustomNode } from '../../../enums/container/custom-nodes/CustomNode';
+import { CustomNode } from '../../../enums/custom-nodes/CustomNode';
 import { ObfuscationEvent } from '../../../enums/event-emitters/ObfuscationEvent';
 
 import { AbstractCustomNodeGroup } from '../../AbstractCustomNodeGroup';
@@ -64,13 +64,20 @@ export class DebugProtectionCustomNodeGroup extends AbstractCustomNodeGroup {
      * @param {IStackTraceData[]} stackTraceData
      */
     public appendCustomNodes (blockScopeNode: TNodeWithBlockStatement, stackTraceData: IStackTraceData[]): void {
-        // debugProtectionFunctionNode append
-        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
-            NodeAppender.appendNode(blockScopeNode, customNode.getNode());
-        });
+        const randomStackTraceIndex: number = this.getRandomStackTraceIndex(stackTraceData.length);
 
         // debugProtectionFunctionCallNode append
         this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionCallNode, (customNode: ICustomNode) => {
+            NodeAppender.appendNodeToOptimalBlockScope(
+                stackTraceData,
+                blockScopeNode,
+                customNode.getNode(),
+                randomStackTraceIndex
+            );
+        });
+
+        // debugProtectionFunctionNode append
+        this.appendCustomNodeIfExist(CustomNode.DebugProtectionFunctionNode, (customNode: ICustomNode) => {
             NodeAppender.appendNode(blockScopeNode, customNode.getNode());
         });
 

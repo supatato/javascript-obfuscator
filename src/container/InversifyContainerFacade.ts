@@ -1,11 +1,13 @@
 import { Container, interfaces } from 'inversify';
 import { ServiceIdentifiers } from './ServiceIdentifiers';
 
+import { analyzersModule } from './modules/analyzers/AnalyzersModule';
 import { controlFlowTransformersModule } from './modules/node-transformers/ControlFlowTransformersModule';
+import { convertingTransformersModule } from './modules/node-transformers/ConvertingTransformersModule';
 import { customNodesModule } from './modules/custom-nodes/CustomNodesModule';
-import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
 import { nodeTransformersModule } from './modules/node-transformers/NodeTransformersModule';
-import { stackTraceAnalyzerModule } from './modules/stack-trace-analyzer/StackTraceAnalyzerModule';
+import { obfuscatingTransformersModule } from './modules/node-transformers/ObfuscatingTransformersModule';
+import { preparingTransformersModule } from './modules/node-transformers/PreparingTransformersModule';
 import { storagesModule } from './modules/storages/StoragesModule';
 import { utilsModule } from './modules/utils/UtilsModule';
 
@@ -16,19 +18,19 @@ import { IJavaScriptObfuscator } from '../interfaces/IJavaScriptObfsucator';
 import { ILogger } from '../interfaces/logger/ILogger';
 import { IObfuscationEventEmitter } from '../interfaces/event-emitters/IObfuscationEventEmitter';
 import { IObfuscationResult } from '../interfaces/IObfuscationResult';
-import { IObfuscator } from '../interfaces/IObfuscator';
 import { IOptions } from '../interfaces/options/IOptions';
 import { ISourceCode } from '../interfaces/ISourceCode';
-import { ISourceMapCorrector } from '../interfaces/ISourceMapCorrector';
+import { ISourceMapCorrector } from '../interfaces/source-map/ISourceMapCorrector';
+import { ITransformersRunner } from '../interfaces/node-transformers/ITransformersRunner';
 
-import { JavaScriptObfuscatorInternal } from '../JavaScriptObfuscatorInternal';
+import { JavaScriptObfuscator } from '../JavaScriptObfuscator';
 import { Logger } from '../logger/Logger';
 import { ObfuscationEventEmitter } from '../event-emitters/ObfuscationEventEmitter';
 import { ObfuscationResult } from '../ObfuscationResult';
-import { Obfuscator } from '../Obfuscator';
 import { Options } from "../options/Options";
 import { SourceCode } from '../SourceCode';
-import { SourceMapCorrector } from '../SourceMapCorrector';
+import { SourceMapCorrector } from '../source-map/SourceMapCorrector';
+import { TransformersRunner } from '../node-transformers/TransformersRunner';
 
 export class InversifyContainerFacade implements IInversifyContainerFacade {
     /**
@@ -154,12 +156,12 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
 
         this.container
             .bind<IJavaScriptObfuscator>(ServiceIdentifiers.IJavaScriptObfuscator)
-            .to(JavaScriptObfuscatorInternal)
+            .to(JavaScriptObfuscator)
             .inSingletonScope();
 
         this.container
-            .bind<IObfuscator>(ServiceIdentifiers.IObfuscator)
-            .to(Obfuscator)
+            .bind<ITransformersRunner>(ServiceIdentifiers.ITransformersRunner)
+            .to(TransformersRunner)
             .inSingletonScope();
 
         this.container
@@ -191,13 +193,15 @@ export class InversifyContainerFacade implements IInversifyContainerFacade {
             .inSingletonScope();
 
         // modules
-        this.container.load(utilsModule);
-        this.container.load(storagesModule);
-        this.container.load(stackTraceAnalyzerModule);
+        this.container.load(analyzersModule);
+        this.container.load(controlFlowTransformersModule);
+        this.container.load(convertingTransformersModule);
         this.container.load(customNodesModule);
         this.container.load(nodeTransformersModule);
-        this.container.load(controlFlowTransformersModule);
         this.container.load(obfuscatingTransformersModule);
+        this.container.load(preparingTransformersModule);
+        this.container.load(storagesModule);
+        this.container.load(utilsModule);
     }
 
     public unload (): void {

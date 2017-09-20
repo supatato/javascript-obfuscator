@@ -3,7 +3,7 @@ import * as ESTree from 'estree';
 
 import { TStatement } from '../types/node/TStatement';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../enums/node/NodeType';
 
 export class Nodes {
     /**
@@ -250,7 +250,7 @@ export class Nodes {
      * @param {string} raw
      * @returns {Literal}
      */
-    public static getLiteralNode (value: boolean|number|string, raw?: string): ESTree.Literal {
+    public static getLiteralNode (value: boolean | number | string, raw?: string): ESTree.Literal {
         raw = raw !== undefined ? raw : `'${value}'`;
 
         return {

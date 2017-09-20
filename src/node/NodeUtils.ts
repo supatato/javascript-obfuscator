@@ -6,10 +6,9 @@ import * as ESTree from 'estree';
 import { TNodeWithBlockStatement } from '../types/node/TNodeWithBlockStatement';
 import { TStatement } from '../types/node/TStatement';
 
-import { NodeType } from '../enums/NodeType';
+import { NodeType } from '../enums/node/NodeType';
 
-import { Node } from './Node';
-import { Nodes } from './Nodes';
+import { NodeGuards } from './NodeGuards';
 
 export class NodeUtils {
     /**
@@ -44,7 +43,7 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static clone <T extends ESTree.Node> (astTree: T): T {
+    public static clone <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
         /**
          * @param {T} node
          * @returns {T}
@@ -88,7 +87,7 @@ export class NodeUtils {
      * @returns {TStatement[]}
      */
     public static convertCodeToStructure (code: string): TStatement[] {
-        let structure: ESTree.Program = esprima.parse(code);
+        let structure: ESTree.Program = esprima.parseScript(code);
 
         structure = NodeUtils.addXVerbatimPropertyToLiterals(structure);
         structure = NodeUtils.parentize(structure);
@@ -97,7 +96,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node[]} structure
+     * @param {NodeGuards[]} structure
      * @returns {string}
      */
     public static convertStructureToCode (structure: ESTree.Node[]): string {
@@ -113,12 +112,12 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @param {number} index
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     public static getBlockStatementNodeByIndex (node: ESTree.Node, index: number = 0): ESTree.Node {
-        if (Node.isNodeHasBlockStatement(node)) {
+        if (NodeGuards.isNodeHasBlockStatement(node)) {
             if (node.body[index] === undefined) {
                 throw new ReferenceError(`Wrong index \`${index}\`. Block-statement body length is \`${node.body.length}\``);
             }
@@ -130,7 +129,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @param {TNodeWithBlockStatement[]} blockScopes
      * @returns {TNodeWithBlockStatement[]}
      */
@@ -141,7 +140,7 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (Node.isBlockStatementNode(parentNode)) {
+        if (NodeGuards.isBlockStatementNode(parentNode)) {
             if (!parentNode.parentNode) {
                 throw new ReferenceError('`parentNode` property of `parentNode` of given node is `undefined`');
             }
@@ -151,17 +150,19 @@ export class NodeUtils {
             }
         }
 
-        if (!Node.isProgramNode(parentNode)) {
+        if (node !== parentNode) {
             return NodeUtils.getBlockScopesOfNode(parentNode, blockScopes);
         }
 
-        blockScopes.push(parentNode);
+        if (NodeGuards.isNodeHasBlockStatement(parentNode)) {
+            blockScopes.push(parentNode);
+        }
 
         return blockScopes;
     }
 
     /**
-     * @param {Node} node
+     * @param {NodeGuards} node
      * @param {number} depth
      * @returns {number}
      */
@@ -172,11 +173,11 @@ export class NodeUtils {
             throw new ReferenceError('`parentNode` property of given node is `undefined`');
         }
 
-        if (Node.isProgramNode(parentNode)) {
+        if (NodeGuards.isProgramNode(parentNode)) {
             return depth;
         }
 
-        if (Node.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
+        if (NodeGuards.isBlockStatementNode(node) && NodeUtils.nodesWithBlockScope.includes(parentNode.type)) {
             return NodeUtils.getNodeBlockScopeDepth(parentNode, ++depth);
         }
 
@@ -185,10 +186,10 @@ export class NodeUtils {
 
     /**
      * @param {UnaryExpression} unaryExpressionNode
-     * @returns {Node}
+     * @returns {NodeGuards}
      */
     public static getUnaryExpressionArgumentNode (unaryExpressionNode: ESTree.UnaryExpression): ESTree.Node {
-        if (Node.isUnaryExpressionNode(unaryExpressionNode.argument)) {
+        if (NodeGuards.isUnaryExpressionNode(unaryExpressionNode.argument)) {
             return NodeUtils.getUnaryExpressionArgumentNode(unaryExpressionNode.argument);
         }
 
@@ -199,36 +200,28 @@ export class NodeUtils {
      * @param {T} astTree
      * @returns {T}
      */
-    public static parentize <T extends ESTree.Node> (astTree: T): T {
-        let isRootNode: boolean = true;
-
+    public static parentize <T extends ESTree.Node = ESTree.Node> (astTree: T): T {
         estraverse.traverse(astTree, {
-            enter: (node: ESTree.Node, parentNode: ESTree.Node): any => {
-                let value: ESTree.Node;
-
-                if (isRootNode) {
-                    if (node.type === NodeType.Program) {
-                        value = node;
-                    } else {
-                        value = Nodes.getProgramNode(<TStatement[]>[node]);
-                        value.parentNode = value;
-                    }
-
-                    isRootNode = false;
-                } else {
-                    value = parentNode || node;
-                }
-
-                node.parentNode = value;
-                node.obfuscatedNode = false;
-            }
+            enter: NodeUtils.parentizeNode
         });
 
         return astTree;
     }
 
     /**
-     * @param {Node} astTree
+     * @param {T} node
+     * @param {Node} parentNode
+     * @returns {T}
+     */
+    public static parentizeNode <T extends ESTree.Node = ESTree.Node> (node: T, parentNode: ESTree.Node): T {
+        node.parentNode = parentNode || node;
+        node.obfuscatedNode = false;
+
+        return node;
+    }
+
+    /**
+     * @param {NodeGuards} astTree
      * @param {string} nodeType
      * @param {visitor} visitor
      */
@@ -241,7 +234,7 @@ export class NodeUtils {
     }
 
     /**
-     * @param {Node} astTree
+     * @param {NodeGuards} astTree
      * @param {string} nodeType
      * @param {Visitor} visitor
      * @param {string} traverseType

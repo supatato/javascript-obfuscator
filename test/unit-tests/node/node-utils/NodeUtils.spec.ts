@@ -493,7 +493,7 @@ describe('NodeUtils', () => {
             );
         });
 
-        describe('parentize AST-tree with `ProgramNode` as root node', () => {
+        describe('variant #1: parentize AST-tree with `ProgramNode` as root node', () => {
             beforeEach(() => {
                 programNode = Nodes.getProgramNode([
                     ifStatementNode
@@ -523,18 +523,13 @@ describe('NodeUtils', () => {
             });
         });
 
-        describe('parentize AST-tree', () => {
+        describe('variant #2: parentize AST-tree', () => {
             beforeEach(() => {
-                programNode = Nodes.getProgramNode([
-                    ifStatementNode
-                ]);
-                programNode.parentNode = programNode;
-
                 ifStatementNode = NodeUtils.parentize(ifStatementNode);
             });
 
             it('should parentize `ifStatement` node', () => {
-                assert.deepEqual(ifStatementNode.parentNode, programNode);
+                assert.deepEqual(ifStatementNode.parentNode, ifStatementNode);
             });
 
             it('should parentize `ifStatement blockStatement` node', () => {
@@ -547,6 +542,44 @@ describe('NodeUtils', () => {
 
             it('should parentize `expressionStatement` node #2', () => {
                 assert.deepEqual(expressionStatementNode2.parentNode, ifStatementBlockStatementNode);
+            });
+        });
+    });
+
+    describe('parentizeNode <T extends ESTree.Node = ESTree.Program> (node: T, parentNode: ESTree.Node): T', () => {
+        describe('variant #1: node with parent node', () => {
+            const identifier: ESTree.Identifier = Nodes.getIdentifierNode('foo');
+            const breakStatement: ESTree.BreakStatement = Nodes.getBreakStatement(identifier);
+
+            const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
+
+            let result: ESTree.Identifier;
+
+            before(() => {
+                expectedResult.parentNode = breakStatement;
+
+                result = NodeUtils.parentizeNode(identifier, breakStatement);
+            });
+
+            it('should parentize given node', () => {
+                assert.deepEqual(result, expectedResult);
+            });
+        });
+
+        describe('variant #2: node without parent node', () => {
+            const identifier: ESTree.Identifier = Nodes.getIdentifierNode('Foo');
+            const expectedResult: ESTree.Identifier = NodeUtils.clone(identifier);
+
+            let result: ESTree.Identifier;
+
+            before(() => {
+                expectedResult.parentNode = expectedResult;
+
+                result = NodeUtils.parentizeNode(identifier, <any>null);
+            });
+
+            it('should parentize given node', () => {
+                assert.deepEqual(result, expectedResult);
             });
         });
     });

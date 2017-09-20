@@ -1,13 +1,14 @@
 import { injectable, inject, postConstruct } from 'inversify';
 import { ServiceIdentifiers } from '../container/ServiceIdentifiers';
 
+import * as estraverse from 'estraverse';
 import * as ESTree from 'estree';
 
 import { IInitializable } from '../interfaces/IInitializable';
 import { INodeTransformer } from '../interfaces/node-transformers/INodeTransformer';
 import { IOptions } from '../interfaces/options/IOptions';
 import { IRandomGenerator } from '../interfaces/utils/IRandomGenerator';
-import { IVisitor } from '../interfaces/IVisitor';
+import { IVisitor } from '../interfaces/node-transformers/IVisitor';
 
 import { initializable } from '../decorators/Initializable';
 
@@ -54,7 +55,7 @@ export abstract class AbstractNodeTransformer implements INodeTransformer, IInit
     /**
      * @param {Node} node
      * @param {Node} parentNode
-     * @returns {Node}
+     * @returns {Node | VisitorOption}
      */
-    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node;
+    public abstract transformNode (node: ESTree.Node, parentNode: ESTree.Node): ESTree.Node | estraverse.VisitorOption;
 }
